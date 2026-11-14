@@ -10,7 +10,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Geist+Mono:wght@400..700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400..600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f2f1ee;
@@ -26,10 +26,10 @@
       --invert-bg: #101014;
       --invert-fg: #f2f1ee;
       --scanline: #1010140a;
-      --font-display: "Archivo", system-ui, sans-serif;
-      --font-serif: "Instrument Serif", Georgia, serif;
-      --font-body: "Inter", system-ui, sans-serif;
-      --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-display: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+      --font-serif: var(--font-display);
+      --font-body: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       color-scheme: light;
     }
     @media (prefers-color-scheme: dark) {
@@ -56,9 +56,10 @@
       background: var(--bg);
       color: var(--ink);
       font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 15px;
+      line-height: 1.65;
       -webkit-font-smoothing: antialiased;
+      font-synthesis: none;
     }
     a { color: inherit; }
     .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
@@ -74,14 +75,15 @@
     }
     .display {
       font-family: var(--font-display);
-      font-weight: 560;
-      font-stretch: 118%;
+      font-weight: 400;
       color: var(--ink-strong);
-      letter-spacing: -0.035em;
-      line-height: 1.02;
+      letter-spacing: 0;
+      line-height: .92;
       margin: 0;
     }
-    .serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-stretch: 100%; letter-spacing: -0.01em; }
+    .serif { font-family: var(--font-display); font-style: normal; font-weight: 400; letter-spacing: 0; color: var(--accent); }
+    .cursor { display: inline-block; width: .42em; height: .62em; margin-left: .12em; vertical-align: baseline; background: var(--accent); animation: blink 1.1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
     .en { color: var(--muted); }
     .chip {
       display: inline-flex; align-items: center; gap: 4px;
@@ -120,8 +122,8 @@
     .logo {
       display: flex; align-items: center; gap: 10px;
       padding: 0 20px; border-right: 1px solid var(--line);
-      text-decoration: none; font-family: var(--font-display); font-stretch: 118%;
-      font-weight: 620; letter-spacing: -0.02em; font-size: 15px;
+      text-decoration: none; font-family: var(--font-display);
+      font-weight: 400; letter-spacing: 0; font-size: 24px; line-height: 1;
     }
     .logo:hover { opacity: .7; }
     .logo-mark { width: 18px; height: 18px; background: var(--accent); display: inline-block; }
@@ -189,9 +191,9 @@
     }
     .hero .eyebrow { color: var(--muted); display: inline-flex; gap: 10px; align-items: center; }
     .hero .eyebrow i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
-    .hero h1 { margin-top: 28px; font-size: clamp(2.6rem, 8vw, 5.4rem); line-height: .98; letter-spacing: -0.04em; max-width: 14ch; }
+    .hero h1 { margin-top: 28px; font-size: clamp(3.4rem, 10vw, 7.4rem); line-height: .9; letter-spacing: 0; max-width: 16ch; }
     .hero h1 .serif { color: var(--accent); }
-    .hero .h1-en { margin-top: 14px; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.25rem, 2.6vw, 1.7rem); color: var(--muted); }
+    .hero .h1-en { margin-top: 14px; font-family: var(--font-serif); font-style: normal; font-size: clamp(1.6rem, 3.2vw, 2.2rem); color: var(--muted); }
     .hero p.lede { margin: 28px auto 0; max-width: 34rem; color: var(--muted); font-size: 1.05rem; }
     .hero p.lede span { display: block; margin-top: 8px; font-size: .95rem; color: var(--faint); }
     .hero-ctas { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
@@ -206,19 +208,23 @@
     @media (min-width: 900px) { .sec-head { grid-template-columns: 1fr 1fr; align-items: end; } }
     .sec-num { color: var(--muted); }
     .sec-num b { color: var(--ink); font-weight: 500; }
-    .sec-head h2 { margin-top: 18px; font-size: clamp(2rem, 5vw, 3.6rem); }
-    .sec-head .h2-en { margin-top: 10px; font-family: var(--font-serif); font-style: italic; font-size: 1.35rem; color: var(--muted); }
+    .sec-head h2 { margin-top: 18px; font-size: clamp(2.9rem, 6.5vw, 5rem); }
+    .sec-head .h2-en { margin-top: 10px; font-family: var(--font-serif); font-style: normal; font-size: 1.75rem; color: var(--muted); }
     .sec-head p { margin: 0; color: var(--muted); max-width: 36rem; }
     .sec-head p + p { margin-top: 10px; color: var(--faint); font-size: .95rem; }
 
     /* --- channel grid ---------------------------------------------- */
     /* auto-fill: any number of channels, cells separated by 1px hairlines */
     .grid.channels {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-      border-top: 1px solid var(--line);
+      display: flex; flex-wrap: wrap; justify-content: center;
+      padding: 1px 0 0 1px; margin-bottom: 72px;
     }
-    .grid.channels .ch { box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line); }
+    .grid.channels .ch {
+      flex: 1 1 260px; max-width: 300px;
+      border: 1px solid var(--line);
+      margin: -1px 0 0 -1px;
+    }
+    @media (max-width: 600px) { .grid.channels .ch { max-width: none; } }
     .ch {
       position: relative; display: flex; flex-direction: column;
       background: var(--bg); text-decoration: none; color: inherit;
@@ -234,19 +240,19 @@
       border-bottom: 1px solid var(--line);
     }
     .ch-mono {
-      font-family: var(--font-display); font-stretch: 125%; font-weight: 700;
-      font-size: clamp(4rem, 9vw, 6.5rem); letter-spacing: -0.06em; line-height: 1;
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(5.5rem, 11vw, 8.5rem); letter-spacing: 0; line-height: 1;
       color: var(--ink-strong);
       transition: transform .35s cubic-bezier(.2,.8,.2,1);
     }
-    .ch-mono em { font-family: var(--font-serif); font-weight: 400; font-stretch: 100%; color: var(--app); letter-spacing: -0.02em; }
+    .ch-mono em { font-family: var(--font-display); font-style: normal; font-weight: 400; color: var(--app); letter-spacing: 0; }
     .ch:hover .ch-mono { transform: scale(1.06); }
     .ch-screen .corner { position: absolute; top: 12px; left: 12px; }
     .ch-screen .corner-r { position: absolute; top: 12px; right: 12px; }
     .ch-body { display: flex; flex-direction: column; gap: 10px; padding: 22px 22px 24px; flex: 1; }
     .ch-title { display: flex; align-items: center; gap: 10px; }
     .ch-dot { width: 22px; height: 22px; background: var(--app); flex: none; }
-    .ch h3 { font-family: var(--font-display); font-stretch: 112%; font-weight: 560; font-size: 1.5rem; letter-spacing: -0.03em; line-height: 1.1; margin: 0; color: var(--ink-strong); overflow-wrap: anywhere; }
+    .ch h3 { font-family: var(--font-display); font-weight: 400; font-size: 2.1rem; letter-spacing: 0; line-height: 1; margin: 0; color: var(--ink-strong); overflow-wrap: anywhere; }
     .ch .handle { margin: 0; font-family: var(--font-mono); font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .ch-cta {
@@ -265,7 +271,7 @@
     @media (min-width: 1100px) { .rules { grid-template-columns: repeat(4, 1fr); } }
     .rule { background: var(--bg); padding: 28px 24px 32px; }
     .rule .n { color: var(--accent); }
-    .rule h3 { font-family: var(--font-display); font-stretch: 112%; font-weight: 560; letter-spacing: -0.02em; font-size: 1.35rem; line-height: 1.15; margin: 18px 0 10px; color: var(--ink-strong); }
+    .rule h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: 0; font-size: 1.9rem; line-height: 1; margin: 18px 0 10px; color: var(--ink-strong); }
     .rule p { margin: 0; color: var(--muted); font-size: .95rem; }
     .rule p.en { margin-top: 8px; color: var(--faint); font-size: .9rem; }
     .rule code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-sunken); border: 1px solid var(--line); padding: 0 4px; }
@@ -292,8 +298,8 @@
 
     /* --- privacy CTA ----------------------------------------------- */
     .cta-band { padding: 88px 0; text-align: center; position: relative; }
-    .cta-band h2 { font-size: clamp(2.2rem, 6vw, 4.2rem); }
-    .cta-band .h2-en { margin-top: 10px; font-family: var(--font-serif); font-style: italic; font-size: 1.4rem; color: var(--muted); }
+    .cta-band h2 { font-size: clamp(3rem, 7.5vw, 5.8rem); }
+    .cta-band .h2-en { margin-top: 10px; font-family: var(--font-serif); font-style: normal; font-size: 1.75rem; color: var(--muted); }
     .cta-band p { color: var(--muted); max-width: 38rem; margin: 22px auto 0; }
     .cta-band p.en { color: var(--faint); margin-top: 8px; font-size: .95rem; }
     .cta-band .hero-ctas { margin-top: 30px; }
@@ -313,7 +319,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      * { transition: none !important; }
+      * { transition: none !important; animation: none !important; }
     }
   </style>
 </head>
@@ -347,7 +353,7 @@
       <p id="galaxy-tip" class="hud" aria-hidden="true"></p>
       <div class="wrap hero-inner">
         <span class="eyebrow hud"><i></i>violaceo-net / Shorts</span>
-        <h1 class="display">Tanti canali. <span class="serif">Un solo</span> flusso.</h1>
+        <h1 class="display">Tanti canali. <span class="serif">Un solo</span> flusso.<span class="cursor" aria-hidden="true"></span></h1>
         <p class="h1-en" lang="en">Many channels. One pipeline.</p>
         <p class="lede">
           Shorts è il mio strumento personale che usa le YouTube Data API v3 per caricare
@@ -378,6 +384,7 @@
         </div>
       </div>
 
+      <div class="wrap">
       <div class="grid channels">
         <a class="ch" href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener" style="--app:#e8a400">
           <div class="ch-screen">
@@ -434,6 +441,7 @@
             <span class="ch-cta hud"><span>Apri canale · Open</span><span class="arrow">↗</span></span>
           </div>
         </a>
+      </div>
       </div>
     </section>
 
@@ -762,16 +770,14 @@
         if (s > 26) {
           ctx.fillStyle = col['--ink-strong'];
           ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.font = '650 ' + Math.round(s * 0.36) + 'px Archivo, system-ui, sans-serif';
-          if ('fontStretch' in ctx) ctx.fontStretch = 'expanded';
+          ctx.font = Math.round(s * 0.52) + 'px VT323, monospace';
           ctx.fillText(c.ch.mono, c.x, c.y - s * 0.04);
         }
         // handle label under large cards
         if (s > 70) {
           ctx.globalAlpha = c.a * 0.9;
           ctx.fillStyle = col['--muted'];
-          ctx.font = '500 9px "Geist Mono", ui-monospace, monospace';
-          if ('fontStretch' in ctx) ctx.fontStretch = 'normal';
+          ctx.font = '500 9px "IBM Plex Mono", ui-monospace, monospace';
           ctx.textAlign = 'left'; ctx.textBaseline = 'top';
           ctx.fillText(c.ch.handle.toUpperCase(), x, y + s + 6);
         }

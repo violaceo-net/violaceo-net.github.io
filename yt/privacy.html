@@ -10,17 +10,17 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Geist+Mono:wght@400..700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400..600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #f2f1ee; --bg-raised: #faf9f7; --bg-sunken: #e9e8e4;
       --ink: #101014; --ink-strong: #000; --muted: #1010149e; --faint: #1010146b;
       --line: #10101429; --line-strong: #10101466; --accent: #7a4fd0;
       --invert-bg: #101014; --invert-fg: #f2f1ee;
-      --font-display: "Archivo", system-ui, sans-serif;
-      --font-serif: "Instrument Serif", Georgia, serif;
-      --font-body: "Inter", system-ui, sans-serif;
-      --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-display: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+      --font-serif: var(--font-display);
+      --font-body: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       color-scheme: light;
     }
     @media (prefers-color-scheme: dark) {
@@ -43,7 +43,8 @@
     html { scroll-behavior: smooth; scroll-padding-top: 64px; }
     body {
       margin: 0; background: var(--bg); color: var(--ink);
-      font-family: var(--font-body); line-height: 1.7; -webkit-font-smoothing: antialiased;
+      font-family: var(--font-body); line-height: 1.7; font-size: 15px; -webkit-font-smoothing: antialiased;
+      font-synthesis: none;
     }
     a { color: var(--ink-strong); text-decoration-color: var(--accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
     a:hover { color: var(--accent); }
@@ -60,7 +61,7 @@
     .logo {
       display: flex; align-items: center; gap: 10px; padding: 0 20px;
       border-right: 1px solid var(--line); text-decoration: none; color: var(--ink);
-      font-family: var(--font-display); font-stretch: 118%; font-weight: 620; letter-spacing: -0.02em; font-size: 15px;
+      font-family: var(--font-display); font-weight: 400; letter-spacing: 0; font-size: 24px; line-height: 1;
     }
     .logo:hover { opacity: .7; color: var(--ink); }
     .logo-mark { width: 18px; height: 18px; background: var(--accent); display: inline-block; }
@@ -78,11 +79,11 @@
     .doc-head { padding: 72px 0 32px; border-bottom: 1px solid var(--line); }
     .doc-head .hud { color: var(--muted); }
     h1 {
-      font-family: var(--font-display); font-stretch: 118%; font-weight: 560;
-      font-size: clamp(2.3rem, 7vw, 4rem); line-height: 1; letter-spacing: -0.04em;
+      font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(3.2rem, 9vw, 5.6rem); line-height: .9; letter-spacing: 0;
       color: var(--ink-strong); margin: 18px 0 0;
     }
-    h1 .serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-stretch: 100%; color: var(--accent); letter-spacing: -0.01em; }
+    h1 .serif { font-family: var(--font-serif); font-style: normal; font-weight: 400; color: var(--accent); letter-spacing: 0; }
     .updated {
       display: inline-block; margin: 20px 0 0; padding: 2px 8px;
       border: 1px solid var(--line); background: var(--bg-sunken);
@@ -90,8 +91,8 @@
     }
     article > p:first-of-type { font-size: 1.05rem; color: var(--muted); margin-top: 28px; }
     h2 {
-      font-family: var(--font-display); font-stretch: 112%; font-weight: 560;
-      font-size: 1.45rem; letter-spacing: -0.025em; line-height: 1.2; color: var(--ink-strong);
+      font-family: var(--font-display); font-weight: 400;
+      font-size: 1.95rem; letter-spacing: 0; line-height: 1.2; color: var(--ink-strong);
       margin: 48px 0 12px; padding-top: 18px; border-top: 1px solid var(--line);
     }
     p, li { color: var(--ink); }
