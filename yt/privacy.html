@@ -5,110 +5,143 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy Policy – Shorts</title>
   <meta name="description" content="Privacy policy dell'app Shorts (violaceo-net). Privacy policy of the Shorts app.">
+  <script>
+    try { var t = localStorage.getItem('theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Geist+Mono:wght@400..700&family=Instrument+Serif:ital@0;1&family=Inter:wght@400..600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #fbfaff;
-      --surface: #ffffff;
-      --text: #1f1b2e;
-      --muted: #5f5873;
-      --border: #e4e0ef;
-      --accent: #6b3fa0;
-      --accent-soft: #f1eafb;
+      --bg: #f2f1ee; --bg-raised: #faf9f7; --bg-sunken: #e9e8e4;
+      --ink: #101014; --ink-strong: #000; --muted: #1010149e; --faint: #1010146b;
+      --line: #10101429; --line-strong: #10101466; --accent: #7a4fd0;
+      --invert-bg: #101014; --invert-fg: #f2f1ee;
+      --font-display: "Archivo", system-ui, sans-serif;
+      --font-serif: "Instrument Serif", Georgia, serif;
+      --font-body: "Inter", system-ui, sans-serif;
+      --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color-scheme: light;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #14121b;
-        --surface: #1c1926;
-        --text: #ece8f6;
-        --muted: #a69fba;
-        --border: #2e2a3c;
-        --accent: #b994ea;
-        --accent-soft: #2a2238;
+      :root:not([data-theme="light"]) {
+        --bg: #121316; --bg-raised: #101014; --bg-sunken: #060607;
+        --ink: #f2f1ee; --ink-strong: #fff; --muted: #f2f1ee99; --faint: #f2f1ee61;
+        --line: #f2f1ee26; --line-strong: #f2f1ee66; --accent: #b08cff;
+        --invert-bg: #fff; --invert-fg: #0b0b0c;
+        color-scheme: dark;
       }
     }
+    :root[data-theme="dark"] {
+      --bg: #121316; --bg-raised: #101014; --bg-sunken: #060607;
+      --ink: #f2f1ee; --ink-strong: #fff; --muted: #f2f1ee99; --faint: #f2f1ee61;
+      --line: #f2f1ee26; --line-strong: #f2f1ee66; --accent: #b08cff;
+      --invert-bg: #fff; --invert-fg: #0b0b0c;
+      color-scheme: dark;
+    }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; }
     body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.65;
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--font-body); line-height: 1.7; -webkit-font-smoothing: antialiased;
     }
-    a { color: var(--accent); overflow-wrap: anywhere; }
-    .top {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 20px 20px 0;
-      font-size: .9rem;
+    a { color: var(--ink-strong); text-decoration-color: var(--accent); text-underline-offset: 3px; overflow-wrap: anywhere; }
+    a:hover { color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .hud { font-family: var(--font-mono); font-size: .6875rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in srgb, var(--bg) 95%, transparent);
+      backdrop-filter: blur(4px); border-bottom: 1px solid var(--line);
     }
-    .top a { text-decoration: none; margin-right: 16px; }
-    main {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 24px 20px 40px;
+    .nav-row { display: flex; align-items: stretch; justify-content: space-between; min-height: 48px; }
+    .nav-left, .nav-right { display: flex; align-items: stretch; }
+    .logo {
+      display: flex; align-items: center; gap: 10px; padding: 0 20px;
+      border-right: 1px solid var(--line); text-decoration: none; color: var(--ink);
+      font-family: var(--font-display); font-stretch: 118%; font-weight: 620; letter-spacing: -0.02em; font-size: 15px;
     }
+    .logo:hover { opacity: .7; color: var(--ink); }
+    .logo-mark { width: 18px; height: 18px; background: var(--accent); display: inline-block; }
+    .nav-link { display: flex; align-items: center; padding: 0 16px; color: var(--muted); text-decoration: none; }
+    .nav-link:hover { background: var(--invert-bg); color: var(--invert-fg); }
+    .icon-cell {
+      width: 48px; display: flex; align-items: center; justify-content: center;
+      border: 0; border-left: 1px solid var(--line); background: transparent;
+      color: var(--muted); cursor: pointer; padding: 0;
+    }
+    .icon-cell:hover { background: var(--invert-bg); color: var(--invert-fg); }
+    .icon-cell svg { width: 16px; height: 16px; }
+
+    main { max-width: 820px; margin: 0 auto; padding: 0 24px 64px; }
+    .doc-head { padding: 72px 0 32px; border-bottom: 1px solid var(--line); }
+    .doc-head .hud { color: var(--muted); }
     h1 {
-      font-size: clamp(1.8rem, 5vw, 2.4rem);
-      margin: 16px 0 4px;
-      letter-spacing: -0.02em;
+      font-family: var(--font-display); font-stretch: 118%; font-weight: 560;
+      font-size: clamp(2.3rem, 7vw, 4rem); line-height: 1; letter-spacing: -0.04em;
+      color: var(--ink-strong); margin: 18px 0 0;
     }
-    .updated { color: var(--muted); margin: 0 0 24px; font-size: .95rem; }
+    h1 .serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-stretch: 100%; color: var(--accent); letter-spacing: -0.01em; }
+    .updated {
+      display: inline-block; margin: 20px 0 0; padding: 2px 8px;
+      border: 1px solid var(--line); background: var(--bg-sunken);
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    }
+    article > p:first-of-type { font-size: 1.05rem; color: var(--muted); margin-top: 28px; }
     h2 {
-      font-size: 1.2rem;
-      margin: 36px 0 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display); font-stretch: 112%; font-weight: 560;
+      font-size: 1.45rem; letter-spacing: -0.025em; line-height: 1.2; color: var(--ink-strong);
+      margin: 48px 0 12px; padding-top: 18px; border-top: 1px solid var(--line);
     }
+    p, li { color: var(--ink); }
     ul { padding-left: 1.2em; }
-    li { margin: 4px 0; }
+    li { margin: 6px 0; }
+    li::marker { color: var(--accent); }
     code {
-      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
-      font-size: .85em;
-      background: var(--accent-soft);
-      padding: 1px 6px;
-      border-radius: 4px;
-      word-break: break-all;
+      font-family: var(--font-mono); font-size: .85em;
+      background: var(--bg-sunken); border: 1px solid var(--line); padding: 0 5px; overflow-wrap: anywhere;
     }
     .callout {
-      margin: 20px 0;
-      padding: 14px 18px;
-      border-left: 4px solid var(--accent);
-      background: var(--surface);
-      border-radius: 0 10px 10px 0;
+      margin: 20px 0; padding: 18px 20px;
+      background: var(--bg-raised); border: 1px solid var(--line); border-left: 3px solid var(--accent);
     }
     .lang-sep {
-      margin: 64px 0 0;
-      padding: 10px 14px;
-      background: var(--accent-soft);
-      border-radius: 8px;
-      font-weight: 600;
-      color: var(--accent);
-      font-size: .9rem;
-      letter-spacing: .04em;
-      text-transform: uppercase;
+      margin: 88px 0 0; padding: 14px 0;
+      border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line);
+      font-family: var(--font-mono); font-size: .6875rem; font-weight: 500;
+      letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
     }
-    footer {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 24px 20px 40px;
-      color: var(--muted);
-      font-size: .85rem;
-      border-top: 1px solid var(--border);
-    }
-    footer a { margin-right: 14px; }
+    footer { background: var(--bg-sunken); border-top: 1px solid var(--line); }
+    .foot { max-width: 820px; margin: 0 auto; padding: 22px 24px; display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: space-between; color: var(--faint); }
+    .foot a { color: var(--muted); text-decoration: none; margin-right: 16px; }
+    .foot a:hover { color: var(--ink); }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
 <body>
-  <nav class="top">
-    <a href="./">← Shorts</a>
-    <a href="#en" lang="en">English version ↓</a>
-  </nav>
+  <header class="nav">
+    <div class="nav-row">
+      <div class="nav-left">
+        <a class="logo" href="./"><i class="logo-mark" aria-hidden="true"></i>Shorts</a>
+      </div>
+      <div class="nav-right">
+        <a class="nav-link hud" href="#en" lang="en">English ↓</a>
+        <button class="icon-cell" id="theme" type="button" aria-label="Cambia tema / Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
   <main>
     <!-- ===================== ITALIANO ===================== -->
     <article lang="it">
-      <h1>Privacy Policy – Shorts</h1>
-      <p class="updated">Ultimo aggiornamento: 14 novembre 2026</p>
+      <div class="doc-head">
+        <span class="hud">violaceo-net / Shorts / Privacy</span>
+        <h1>Privacy <span class="serif">Policy</span></h1>
+        <p class="updated">Ultimo aggiornamento: 14 novembre 2026</p>
+      </div>
 
       <p>
         Questa informativa descrive come l'applicazione <strong>Shorts</strong>
@@ -201,8 +234,11 @@
     <p class="lang-sep" id="en" lang="en">English version</p>
 
     <article lang="en">
-      <h1>Privacy Policy – Shorts</h1>
-      <p class="updated">Last updated: November 14, 2026</p>
+      <div class="doc-head">
+        <span class="hud">violaceo-net / Shorts / Privacy</span>
+        <h1>Privacy <span class="serif">Policy</span></h1>
+        <p class="updated">Last updated: November 14, 2026</p>
+      </div>
 
       <p>
         This policy describes how the <strong>Shorts</strong> application ("the app")
@@ -294,8 +330,23 @@
   </main>
 
   <footer>
-    <a href="./">Shorts</a>
-    <a href="../">violaceo-net</a>
+    <div class="foot hud">
+      <span><a href="./">← Shorts</a><a href="../">violaceo-net</a></span>
+      <span>© 2026 violaceo-net</span>
+    </div>
   </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      document.getElementById('theme').addEventListener('click', function () {
+        var dark = root.dataset.theme ? root.dataset.theme === 'dark'
+          : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+        var next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+    })();
+  </script>
 </body>
 </html>
