@@ -164,9 +164,28 @@
       pointer-events: none;
     }
     .hero-inner {
-      position: relative; width: 100%;
+      position: relative; z-index: 1; width: 100%;
       display: flex; flex-direction: column; align-items: center; text-align: center;
       padding: 96px 0;
+      pointer-events: none;
+    }
+    .hero-inner > * { position: relative; z-index: 1; }
+    .hero-inner::before {
+      content: ""; position: absolute; z-index: 0;
+      left: 50%; top: 50%; width: min(980px, 130%); height: 78%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 84%, transparent), transparent);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent);
+              mask-image: radial-gradient(closest-side, #000 45%, transparent);
+    }
+    .hero-ctas a, .hero-inner a { pointer-events: auto; }
+    #galaxy { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+    #galaxy-tip {
+      position: absolute; z-index: 5; left: 0; top: 0;
+      padding: 4px 8px; background: var(--invert-bg); color: var(--invert-fg);
+      font-weight: 700; white-space: nowrap; pointer-events: none;
+      opacity: 0; transition: opacity .12s;
     }
     .hero .eyebrow { color: var(--muted); display: inline-flex; gap: 10px; align-items: center; }
     .hero .eyebrow i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
@@ -193,14 +212,13 @@
     .sec-head p + p { margin-top: 10px; color: var(--faint); font-size: .95rem; }
 
     /* --- channel grid ---------------------------------------------- */
-    .grid {
-      display: grid; gap: 1px;
-      background: var(--line);
+    /* auto-fill: any number of channels, cells separated by 1px hairlines */
+    .grid.channels {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
       border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
     }
-    @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1200px) { .grid.channels { grid-template-columns: repeat(4, 1fr); } }
+    .grid.channels .ch { box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line); }
     .ch {
       position: relative; display: flex; flex-direction: column;
       background: var(--bg); text-decoration: none; color: inherit;
@@ -325,10 +343,12 @@
   <main>
     <!-- ============================ HERO ============================ -->
     <section class="hero">
+      <canvas id="galaxy" aria-hidden="true"></canvas>
+      <p id="galaxy-tip" class="hud" aria-hidden="true"></p>
       <div class="wrap hero-inner">
         <span class="eyebrow hud"><i></i>violaceo-net / Shorts</span>
-        <h1 class="display">Quattro canali. <span class="serif">Un solo</span> flusso.</h1>
-        <p class="h1-en" lang="en">Four channels. One pipeline.</p>
+        <h1 class="display">Tanti canali. <span class="serif">Un solo</span> flusso.</h1>
+        <p class="h1-en" lang="en">Many channels. One pipeline.</p>
         <p class="lede">
           Shorts è il mio strumento personale che usa le YouTube Data API v3 per caricare
           in automatico gli short sui miei canali YouTube.
@@ -564,7 +584,268 @@
         var next = isDark() ? 'light' : 'dark';
         root.dataset.theme = next;
         try { localStorage.setItem('theme', next); } catch (e) {}
+        window.dispatchEvent(new Event('themechange'));
       });
+    })();
+  </script>
+
+  <script>
+    /* Hero "galaxy": spiral arms with ticks; one card per channel (repeated) travels
+       from the centre outward along the arms while the whole system slowly spins.
+       Channels are read from the #canali grid, so adding a card there is enough. */
+    (function () {
+      var canvas = document.getElementById('galaxy');
+      if (!canvas || !canvas.getContext) return;
+      var ctx = canvas.getContext('2d');
+      var hero = canvas.parentElement;
+      var tip = document.getElementById('galaxy-tip');
+      var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var channels = [].map.call(document.querySelectorAll('#canali .ch'), function (a) {
+        var h3 = a.querySelector('h3'), mono = a.querySelector('.ch-mono'), handle = a.querySelector('.handle');
+        var name = h3 ? h3.textContent.trim() : a.href;
+        return {
+          name: name,
+          handle: handle ? handle.textContent.trim() : '',
+          url: a.href,
+          color: (a.style.getPropertyValue('--app') || '').trim() || '#7a4fd0',
+          mono: mono ? mono.textContent.trim() : name.slice(0, 2)
+        };
+      });
+      if (!channels.length) return;
+
+      // --- layout constants ---------------------------------------------------
+      var ARMS = 3;
+      var B = 0.28;                         // log-spiral tightness
+      var SPIN = -50 * Math.PI / 180 / 60;  // rad per second (−50°/min)
+      var SPEED = 0.55;                     // journeys (centre → edge) per minute
+      var SCRUB = 0.2;                      // journeys per 1000px of scroll
+      var perArm = Math.max(5, Math.ceil(channels.length * 4 / ARMS));
+
+      var cards = [], k = 0;
+      for (var arm = 0; arm < ARMS; arm++) {
+        for (var i = 0; i < perArm; i++) {
+          cards.push({
+            arm: arm,
+            p0: (i / perArm + arm / (ARMS * perArm)) % 1,
+            ch: channels[k++ % channels.length],
+            wob: Math.random() * Math.PI * 2,
+            x: 0, y: 0, s: 0, a: 0
+          });
+        }
+      }
+
+      // --- theme colours -------------------------------------------------------
+      var col = {};
+      function readColors() {
+        var cs = getComputedStyle(document.documentElement);
+        ['--line', '--line-strong', '--ink', '--ink-strong', '--muted', '--faint', '--bg-raised', '--accent']
+          .forEach(function (v) { col[v] = cs.getPropertyValue(v).trim(); });
+      }
+      readColors();
+      window.addEventListener('themechange', function () { readColors(); if (reduce) draw(); });
+      if (window.matchMedia) {
+        var mq = matchMedia('(prefers-color-scheme: dark)');
+        var onMq = function () { readColors(); if (reduce) draw(); };
+        if (mq.addEventListener) mq.addEventListener('change', onMq); else if (mq.addListener) mq.addListener(onMq);
+      }
+
+      // --- state ---------------------------------------------------------------
+      var phase = 0, spin = 0, hold = 0, hover = -1, last = 0, t0 = 0;
+      var mouse = { x: -1e4, y: -1e4 };
+      function tMax() { return Math.log(rMax / rMin) / B; }
+
+      // --- sizing --------------------------------------------------------------
+      var W = 0, H = 0, dpr = 1, cx = 0, cy = 0, rMin = 24, rMax = 600, scale = 1;
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+        cx = W / 2; cy = H / 2;
+        rMax = Math.hypot(W, H) * 0.56;
+        rMin = 22;
+        scale = Math.max(0.6, Math.min(1.25, Math.min(W, H) / 820));
+        if (reduce) draw();
+      }
+      if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas); else window.addEventListener('resize', resize);
+      resize();
+
+      function smooth(e0, e1, x) { var t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
+
+      function drawArms() {
+        var tm = tMax();
+        ctx.lineWidth = 1;
+        for (var a = 0; a < ARMS; a++) {
+          var off = a * Math.PI * 2 / ARMS + spin;
+          // dashed arm
+          ctx.strokeStyle = col['--line-strong'];
+          ctx.setLineDash([2, 7]);
+          ctx.beginPath();
+          for (var t = 0; t <= tm; t += 0.04) {
+            var r = rMin * Math.exp(B * t), th = t + off;
+            var x = cx + r * Math.cos(th), y = cy + r * Math.sin(th);
+            if (t === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+          // ticks perpendicular to the arm
+          ctx.strokeStyle = col['--line'];
+          ctx.beginPath();
+          for (var tt = 0.6; tt <= tm; tt += 0.32) {
+            var rr = rMin * Math.exp(B * tt), a1 = tt + off;
+            var px = cx + rr * Math.cos(a1), py = cy + rr * Math.sin(a1);
+            // tangent of log spiral: angle = theta + atan(1/B)
+            var tan = a1 + Math.atan2(1, B), nrm = tan + Math.PI / 2;
+            var len = 3 + rr * 0.012;
+            ctx.moveTo(px - Math.cos(nrm) * len, py - Math.sin(nrm) * len);
+            ctx.lineTo(px + Math.cos(nrm) * len, py + Math.sin(nrm) * len);
+          }
+          ctx.stroke();
+        }
+        // HUD rings + crosshair
+        ctx.strokeStyle = col['--line'];
+        ctx.setLineDash([1, 5]);
+        [0.22, 0.46, 0.74].forEach(function (f) {
+          ctx.beginPath(); ctx.arc(cx, cy, rMax * f, 0, Math.PI * 2); ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy);
+        ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8);
+        ctx.stroke();
+      }
+
+      function place(now) {
+        var tm = tMax();
+        cards.forEach(function (c) {
+          var p = (c.p0 + phase) % 1; if (p < 0) p += 1;
+          var t = Math.pow(p, 0.85) * tm;
+          var r = rMin * Math.exp(B * t);
+          var th = t + c.arm * Math.PI * 2 / ARMS + spin + Math.sin(now / 2400 + c.wob) * 0.03;
+          c.p = p;
+          c.x = cx + r * Math.cos(th);
+          c.y = cy + r * Math.sin(th);
+          c.s = (14 + 86 * Math.pow(p, 1.25)) * scale;
+          c.a = smooth(0.02, 0.14, p) * (1 - smooth(0.84, 1, p));
+          // fade cards that pass behind the headline/text block
+          var rx = Math.min(W * 0.3, 440), ry = Math.min(H * 0.3, 300);
+          var dx = (c.x - cx) / rx, dy = (c.y - cy) / ry, d = dx * dx + dy * dy;
+          c.a *= 0.15 + 0.85 * smooth(0.55, 1.0, d);
+        });
+        cards.sort(function (a, b) { return a.p - b.p; });
+      }
+
+      function hitTest() {
+        for (var i = cards.length - 1; i >= 0; i--) {
+          var c = cards[i];
+          if (c.a < 0.35 || c.s < 22) continue;
+          if (Math.abs(mouse.x - c.x) <= c.s / 2 && Math.abs(mouse.y - c.y) <= c.s / 2) return i;
+        }
+        return -1;
+      }
+
+      function drawCard(c, isHover) {
+        var s = c.s * (isHover ? 1.08 : 1), x = c.x - s / 2, y = c.y - s / 2;
+        ctx.globalAlpha = c.a;
+        ctx.fillStyle = col['--bg-raised'];
+        ctx.fillRect(x, y, s, s);
+        // colour bar
+        ctx.fillStyle = c.ch.color;
+        ctx.fillRect(x, y + s * 0.86, s, s * 0.14);
+        // corner square
+        ctx.fillRect(x + s * 0.08, y + s * 0.08, s * 0.1, s * 0.1);
+        // border
+        ctx.lineWidth = isHover ? 2 : 1;
+        ctx.strokeStyle = isHover ? col['--accent'] : col['--line-strong'];
+        ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
+        // monogram
+        if (s > 26) {
+          ctx.fillStyle = col['--ink-strong'];
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.font = '650 ' + Math.round(s * 0.36) + 'px Archivo, system-ui, sans-serif';
+          if ('fontStretch' in ctx) ctx.fontStretch = 'expanded';
+          ctx.fillText(c.ch.mono, c.x, c.y - s * 0.04);
+        }
+        // handle label under large cards
+        if (s > 70) {
+          ctx.globalAlpha = c.a * 0.9;
+          ctx.fillStyle = col['--muted'];
+          ctx.font = '500 9px "Geist Mono", ui-monospace, monospace';
+          if ('fontStretch' in ctx) ctx.fontStretch = 'normal';
+          ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+          ctx.fillText(c.ch.handle.toUpperCase(), x, y + s + 6);
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      function draw(now) {
+        now = now || performance.now();
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        drawArms();
+        place(now);
+        hover = hitTest();
+        for (var i = 0; i < cards.length; i++) drawCard(cards[i], i === hover);
+        if (hover >= 0) {
+          var c = cards[hover];
+          tip.textContent = c.ch.name + ' ↗';
+          tip.style.transform = 'translate(' + Math.round(mouse.x + 14) + 'px,' + Math.round(mouse.y + 14) + 'px)';
+          tip.style.opacity = 1;
+          canvas.style.cursor = 'pointer';
+        } else {
+          tip.style.opacity = 0;
+          canvas.style.cursor = '';
+        }
+      }
+
+      // --- animation loop --------------------------------------------------------
+      var running = false, visible = true, raf = 0;
+      function frame(now) {
+        if (!running) return;
+        if (!last) { last = now; t0 = now; }
+        var dt = Math.min(0.05, (now - last) / 1000); last = now;
+        var burst = 1 + 2 * (1 - smooth(0, 2600, now - t0));     // arrives fast, settles
+        hold += ((hover >= 0 ? 1 : 0) - hold) * (1 - Math.exp(-dt / 0.15));
+        var k = 1 - hold * 0.9;
+        phase += dt * SPEED / 60 * burst * k;
+        spin += dt * SPIN * k;
+        draw(now);
+        raf = requestAnimationFrame(frame);
+      }
+      function start() { if (!running && visible && !document.hidden && !reduce) { running = true; last = 0; raf = requestAnimationFrame(frame); } }
+      function stop() { running = false; cancelAnimationFrame(raf); }
+
+      if (window.IntersectionObserver) {
+        new IntersectionObserver(function (e) { visible = e[0].isIntersecting; visible ? start() : stop(); }).observe(hero);
+      }
+      document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+
+      // scroll scrubs the conveyor (reversible)
+      var lastScroll = window.scrollY;
+      window.addEventListener('scroll', function () {
+        var y = window.scrollY;
+        phase += (y - lastScroll) * SCRUB / 1000;
+        lastScroll = y;
+        if (reduce) draw();
+      }, { passive: true });
+
+      // pointer
+      canvas.addEventListener('pointermove', function (e) {
+        var r = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+        if (reduce) draw();
+      });
+      canvas.addEventListener('pointerleave', function () {
+        mouse.x = mouse.y = -1e4;
+        if (reduce) draw();
+      });
+      canvas.addEventListener('click', function () {
+        if (hover >= 0) window.open(cards[hover].ch.url, '_blank', 'noopener');
+      });
+
+      if (reduce) { phase = 0.35; draw(); }
+      else start();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (reduce) draw(); });
     })();
   </script>
 </body>
