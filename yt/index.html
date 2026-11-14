@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shorts – violaceo-net</title>
+  <meta name="description" content="Shorts: strumento personale che usa le YouTube Data API v3 per caricare e gestire gli short sui miei canali YouTube.">
+  <style>
+    :root {
+      --bg: #fbfaff;
+      --surface: #ffffff;
+      --text: #1f1b2e;
+      --muted: #5f5873;
+      --border: #e4e0ef;
+      --accent: #6b3fa0;
+      --accent-text: #ffffff;
+      --accent-soft: #f1eafb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14121b;
+        --surface: #1c1926;
+        --text: #ece8f6;
+        --muted: #a69fba;
+        --border: #2e2a3c;
+        --accent: #b994ea;
+        --accent-text: #14121b;
+        --accent-soft: #2a2238;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: var(--accent); }
+    .top {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 20px 0;
+      font-size: .9rem;
+    }
+    .top a { text-decoration: none; }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+    header.hero { padding: 24px 0 8px; }
+    h1 {
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    .tagline { font-size: 1.1rem; color: var(--muted); margin: 0 0 24px; }
+    .cta {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: var(--accent-text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .cta:hover, .cta:focus-visible { filter: brightness(1.08); }
+    .cta-note { display: block; margin-top: 8px; font-size: .85rem; color: var(--muted); }
+    h2 {
+      font-size: 1.3rem;
+      margin: 40px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 { font-size: 1.05rem; margin: 24px 0 8px; }
+    .lang-sep {
+      margin: 64px 0 0;
+      padding: 10px 14px;
+      background: var(--accent-soft);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: .9rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    ul { padding-left: 1.2em; }
+    li { margin: 4px 0; }
+    .scopes { display: grid; gap: 10px; margin: 12px 0; padding: 0; list-style: none; }
+    .scopes li {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: .85em;
+      background: var(--accent-soft);
+      padding: 1px 6px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+    .scope-why { display: block; color: var(--muted); font-size: .95rem; margin-top: 4px; }
+    .callout {
+      margin: 24px 0;
+      padding: 16px 18px;
+      border-left: 4px solid var(--accent);
+      background: var(--surface);
+      border-radius: 0 10px 10px 0;
+    }
+    footer {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+      color: var(--muted);
+      font-size: .85rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { margin-right: 14px; }
+  </style>
+</head>
+<body>
+  <nav class="top"><a href="../">← violaceo-net – Progetti</a></nav>
+
+  <main>
+    <!-- ===================== ITALIANO ===================== -->
+    <section lang="it">
+      <header class="hero">
+        <h1>Shorts</h1>
+        <p class="tagline">
+          Strumento personale che usa le YouTube Data API v3 per caricare e gestire
+          in automatico gli short sui miei canali YouTube.
+        </p>
+        <a class="cta" href="privacy.html">Leggi la Privacy Policy</a>
+        <span class="cta-note">Informativa completa su dati, permessi e revoca dell'accesso.</span>
+      </header>
+
+      <h2>Cos'è</h2>
+      <p>
+        <strong>Shorts</strong> è un'applicazione desktop ad uso esclusivamente personale.
+        Non è un servizio pubblico: viene eseguita solo sul mio PC e opera solo sui canali
+        YouTube di mia proprietà, dopo che ho autorizzato l'accesso tramite il login Google (OAuth 2.0).
+      </p>
+
+      <h2>Cosa fa</h2>
+      <ul>
+        <li><strong>Caricamento</strong> degli short sui miei canali, anche in modo programmato.</li>
+        <li><strong>Gestione dei metadati</strong>: titolo, descrizione, tag, miniatura, playlist, stato di visibilità e data di pubblicazione.</li>
+        <li><strong>Lettura delle statistiche</strong> del canale e dei video (visualizzazioni, like, commenti, iscritti) per tenere traccia dei risultati.</li>
+      </ul>
+
+      <h2>Permessi richiesti e perché</h2>
+      <p>Al primo avvio l'app chiede a Google l'autorizzazione per questi ambiti (scope):</p>
+      <ul class="scopes">
+        <li>
+          <code>https://www.googleapis.com/auth/youtube.upload</code>
+          <span class="scope-why">Per caricare i video (short) sui miei canali.</span>
+        </li>
+        <li>
+          <code>https://www.googleapis.com/auth/youtube</code>
+          <span class="scope-why">Per modificare i metadati dei video già caricati (titolo, descrizione, tag, miniatura, playlist, visibilità).</span>
+        </li>
+        <li>
+          <code>https://www.googleapis.com/auth/youtube.readonly</code>
+          <span class="scope-why">Per leggere le informazioni e le statistiche del canale e dei video.</span>
+        </li>
+      </ul>
+      <div class="callout">
+        I token di accesso e i dati letti restano solo sul mio PC: non vengono inviati a server
+        di terzi, né venduti o condivisi. L'accesso si può revocare in qualsiasi momento da
+        <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.
+        Dettagli nella <a href="privacy.html"><strong>Privacy Policy</strong></a>.
+      </div>
+    </section>
+
+    <!-- ===================== ENGLISH ===================== -->
+    <p class="lang-sep" lang="en">English version</p>
+
+    <section lang="en">
+      <header class="hero">
+        <h1>Shorts</h1>
+        <p class="tagline">
+          A personal tool that uses the YouTube Data API v3 to automatically upload and
+          manage Shorts on my YouTube channels.
+        </p>
+        <a class="cta" href="privacy.html">Read the Privacy Policy</a>
+        <span class="cta-note">Full details on data, permissions and how to revoke access.</span>
+      </header>
+
+      <h2>What it is</h2>
+      <p>
+        <strong>Shorts</strong> is a desktop application for personal use only.
+        It is not a public service: it runs only on my PC and acts only on YouTube channels
+        I own, after I authorize access through Google sign-in (OAuth 2.0).
+      </p>
+
+      <h2>What it does</h2>
+      <ul>
+        <li><strong>Uploads</strong> Shorts to my channels, including scheduled uploads.</li>
+        <li><strong>Manages metadata</strong>: title, description, tags, thumbnail, playlists, privacy status and publish date.</li>
+        <li><strong>Reads statistics</strong> for the channel and its videos (views, likes, comments, subscribers) to track results.</li>
+      </ul>
+
+      <h2>Permissions requested and why</h2>
+      <p>On first run the app asks Google for authorization for these scopes:</p>
+      <ul class="scopes">
+        <li>
+          <code>https://www.googleapis.com/auth/youtube.upload</code>
+          <span class="scope-why">To upload videos (Shorts) to my channels.</span>
+        </li>
+        <li>
+          <code>https://www.googleapis.com/auth/youtube</code>
+          <span class="scope-why">To edit the metadata of videos already uploaded (title, description, tags, thumbnail, playlists, privacy status).</span>
+        </li>
+        <li>
+          <code>https://www.googleapis.com/auth/youtube.readonly</code>
+          <span class="scope-why">To read channel and video information and statistics.</span>
+        </li>
+      </ul>
+      <div class="callout">
+        Access tokens and any data read stay only on my PC: they are not sent to third-party
+        servers, sold or shared. Access can be revoked at any time at
+        <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.
+        See the <a href="privacy.html"><strong>Privacy Policy</strong></a> for details.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="../">violaceo-net</a>
+    <br>Shorts non è affiliato a YouTube o Google. · Shorts is not affiliated with YouTube or Google.
+  </footer>
+</body>
+</html>
