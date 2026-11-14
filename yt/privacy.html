@@ -61,6 +61,14 @@
     }
     ul { padding-left: 1.2em; }
     li { margin: 4px 0; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: .85em;
+      background: var(--accent-soft);
+      padding: 1px 6px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
     .callout {
       margin: 20px 0;
       padding: 14px 18px;
@@ -106,41 +114,44 @@
         Questa informativa descrive come l'applicazione <strong>Shorts</strong>
         (di seguito "l'app") accede, usa, conserva e protegge i dati del tuo account
         Google/YouTube. L'app è uno strumento personale, eseguito solo sul PC del suo
-        sviluppatore, che usa le YouTube Data API v3 per caricare e gestire gli short
-        sui canali YouTube del proprietario.
+        sviluppatore, che usa le YouTube Data API v3 per caricare gli short sui canali
+        YouTube del proprietario.
       </p>
 
-      <h2>1. Dati dell'account YouTube a cui l'app accede</h2>
-      <p>Dopo l'autorizzazione tramite OAuth 2.0, l'app può:</p>
+      <h2>1. Permesso richiesto e dati trattati</h2>
+      <p>
+        L'app richiede un solo ambito OAuth 2.0:
+        <code>https://www.googleapis.com/auth/youtube.upload</code>, e lo usa esclusivamente
+        per caricare video tramite il metodo <code>videos.insert</code> delle YouTube Data API v3.
+      </p>
+      <p>Gli unici dati trattati sono quelli che l'app invia a YouTube al momento del caricamento:</p>
       <ul>
-        <li><strong>Caricare video</strong> (short) sul canale autorizzato.</li>
-        <li><strong>Leggere e modificare i metadati dei video</strong>: titolo, descrizione, tag, categoria, miniatura, playlist, stato di visibilità e data di pubblicazione programmata.</li>
-        <li><strong>Leggere le informazioni e le statistiche del canale e dei video</strong>: nome e ID del canale, elenco dei video caricati, visualizzazioni, like, commenti e numero di iscritti.</li>
+        <li>il <strong>file video</strong> dello short;</li>
+        <li>i <strong>metadati</strong> del video: <strong>titolo, descrizione e tag</strong>.</li>
       </ul>
       <p>
-        L'app non accede a email, contatti, cronologia di visione, messaggi o altri dati
-        dell'account Google non necessari alle funzioni sopra descritte.
+        L'app <strong>non legge</strong> statistiche, informazioni del canale, playlist, commenti
+        o altri dati dell'account, e <strong>non modifica né cancella</strong> video già pubblicati.
+        Non accede inoltre a email, contatti, cronologia di visione o altri dati dell'account Google.
       </p>
 
       <h2>2. Come vengono usati i dati</h2>
       <p>
-        I dati sono usati esclusivamente per fornire le funzioni dell'app: caricare gli short,
-        aggiornarne i metadati e mostrare le statistiche al proprietario del canale.
+        I dati sono usati esclusivamente per caricare gli short sul canale del proprietario.
         Non sono usati per pubblicità, profilazione o addestramento di modelli di intelligenza artificiale.
       </p>
 
       <h2>3. Conservazione dei dati</h2>
       <ul>
-        <li>I token OAuth (di accesso e di aggiornamento) e i dati letti dalle API sono salvati <strong>solo in locale, sul PC su cui gira l'app</strong>.</li>
-        <li>Non esiste alcun server dell'app: nessun dato viene inviato a server propri o di terzi, ad eccezione delle chiamate dirette alle API di Google/YouTube necessarie al funzionamento.</li>
-        <li>I dati restano sul PC finché sono utili all'app; cancellando i file locali dei token e dei dati dell'app, questi vengono eliminati definitivamente.</li>
+        <li>I token OAuth (di accesso e di aggiornamento) sono salvati <strong>solo in locale, sul PC su cui gira l'app</strong>.</li>
+        <li>Non esiste alcun server dell'app: nessun dato viene inviato a server propri o di terzi, ad eccezione delle chiamate dirette alle API di YouTube necessarie per il caricamento.</li>
+        <li>Cancellando i file locali dei token, questi vengono eliminati definitivamente.</li>
       </ul>
 
       <h2>4. Condivisione con terzi</h2>
       <p>
         I dati <strong>non vengono venduti, né ceduti, né condivisi con terzi</strong> per nessuno scopo.
-        Gli unici destinatari dei dati sono i servizi di Google/YouTube, tramite le API ufficiali,
-        per eseguire le operazioni richieste.
+        L'unico destinatario dei dati è YouTube, tramite le API ufficiali, per eseguire il caricamento richiesto.
       </p>
 
       <h2>5. Google API Services User Data Policy e Limited Use</h2>
@@ -171,8 +182,7 @@
         Puoi revocare in qualsiasi momento l'accesso dell'app al tuo account dalla pagina
         <a href="https://myaccount.google.com/permissions">https://myaccount.google.com/permissions</a>
         (Account Google → Sicurezza → App e servizi di terze parti). Dopo la revoca l'app non può
-        più accedere ai dati dell'account; i token salvati in locale smettono di funzionare e
-        possono essere cancellati.
+        più caricare video; i token salvati in locale smettono di funzionare e possono essere cancellati.
       </p>
 
       <h2>8. Modifiche a questa informativa</h2>
@@ -198,40 +208,45 @@
         This policy describes how the <strong>Shorts</strong> application ("the app")
         accesses, uses, stores and protects data from your Google/YouTube account.
         The app is a personal tool, running only on its developer's PC, that uses the
-        YouTube Data API v3 to upload and manage Shorts on the owner's YouTube channels.
+        YouTube Data API v3 to upload Shorts to the owner's YouTube channels.
       </p>
 
-      <h2>1. YouTube account data the app accesses</h2>
-      <p>After authorization via OAuth 2.0, the app can:</p>
+      <h2>1. Permission requested and data processed</h2>
+      <p>
+        The app requests a single OAuth 2.0 scope:
+        <code>https://www.googleapis.com/auth/youtube.upload</code>, and uses it solely to
+        upload videos through the <code>videos.insert</code> method of the YouTube Data API v3.
+      </p>
+      <p>The only data processed is what the app sends to YouTube at upload time:</p>
       <ul>
-        <li><strong>Upload videos</strong> (Shorts) to the authorized channel.</li>
-        <li><strong>Read and edit video metadata</strong>: title, description, tags, category, thumbnail, playlists, privacy status and scheduled publish date.</li>
-        <li><strong>Read channel and video information and statistics</strong>: channel name and ID, list of uploaded videos, views, likes, comments and subscriber count.</li>
+        <li>the Short's <strong>video file</strong>;</li>
+        <li>the video's <strong>metadata</strong>: <strong>title, description and tags</strong>.</li>
       </ul>
       <p>
-        The app does not access email, contacts, watch history, messages or any other
-        Google account data not needed for the features described above.
+        The app <strong>does not read</strong> statistics, channel information, playlists,
+        comments or any other account data, and <strong>does not edit or delete</strong> videos that
+        are already published. It also does not access email, contacts, watch history or any
+        other Google account data.
       </p>
 
       <h2>2. How the data is used</h2>
       <p>
-        Data is used solely to provide the app's features: uploading Shorts, updating their
-        metadata and showing statistics to the channel owner. It is not used for advertising,
-        profiling or training artificial intelligence models.
+        Data is used solely to upload Shorts to the owner's channel. It is not used for
+        advertising, profiling or training artificial intelligence models.
       </p>
 
       <h2>3. Data storage</h2>
       <ul>
-        <li>OAuth tokens (access and refresh) and data read from the APIs are stored <strong>only locally, on the PC where the app runs</strong>.</li>
-        <li>The app has no server: no data is sent to the developer's or any third-party servers, except for the direct calls to Google/YouTube APIs required for the app to work.</li>
-        <li>Data stays on the PC only as long as the app needs it; deleting the app's local token and data files permanently removes it.</li>
+        <li>OAuth tokens (access and refresh) are stored <strong>only locally, on the PC where the app runs</strong>.</li>
+        <li>The app has no server: no data is sent to the developer's or any third-party servers, except for the direct calls to the YouTube APIs required for uploading.</li>
+        <li>Deleting the local token files permanently removes them.</li>
       </ul>
 
       <h2>4. Sharing with third parties</h2>
       <p>
         Data is <strong>not sold, transferred or shared with third parties</strong> for any purpose.
-        The only recipients of the data are Google/YouTube services, through the official APIs,
-        to carry out the requested operations.
+        The only recipient of the data is YouTube, through the official APIs, to perform the
+        requested upload.
       </p>
 
       <h2>5. Google API Services User Data Policy and Limited Use</h2>
@@ -262,7 +277,7 @@
         You can revoke the app's access to your account at any time at
         <a href="https://myaccount.google.com/permissions">https://myaccount.google.com/permissions</a>
         (Google Account → Security → Third-party apps &amp; services). After revocation the app can
-        no longer access the account's data; locally stored tokens stop working and can be deleted.
+        no longer upload videos; locally stored tokens stop working and can be deleted.
       </p>
 
       <h2>8. Changes to this policy</h2>

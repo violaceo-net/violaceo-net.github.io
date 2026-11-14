@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shorts – violaceo-net</title>
-  <meta name="description" content="Shorts: strumento personale che usa le YouTube Data API v3 per caricare e gestire gli short sui miei canali YouTube.">
+  <meta name="description" content="Shorts: strumento personale che usa le YouTube Data API v3 per caricare in automatico gli short sui miei canali YouTube.">
   <style>
     :root {
       --bg: #fbfaff;
@@ -73,7 +73,6 @@
       padding-bottom: 6px;
       border-bottom: 1px solid var(--border);
     }
-    h3 { font-size: 1.05rem; margin: 24px 0 8px; }
     .lang-sep {
       margin: 64px 0 0;
       padding: 10px 14px;
@@ -131,8 +130,8 @@
       <header class="hero">
         <h1>Shorts</h1>
         <p class="tagline">
-          Strumento personale che usa le YouTube Data API v3 per caricare e gestire
-          in automatico gli short sui miei canali YouTube.
+          Strumento personale che usa le YouTube Data API v3 per caricare in automatico
+          gli short sui miei canali YouTube.
         </p>
         <a class="cta" href="privacy.html">Leggi la Privacy Policy</a>
         <span class="cta-note">Informativa completa su dati, permessi e revoca dell'accesso.</span>
@@ -146,31 +145,27 @@
       </p>
 
       <h2>Cosa fa</h2>
-      <ul>
-        <li><strong>Caricamento</strong> degli short sui miei canali, anche in modo programmato.</li>
-        <li><strong>Gestione dei metadati</strong>: titolo, descrizione, tag, miniatura, playlist, stato di visibilità e data di pubblicazione.</li>
-        <li><strong>Lettura delle statistiche</strong> del canale e dei video (visualizzazioni, like, commenti, iscritti) per tenere traccia dei risultati.</li>
-      </ul>
+      <p>
+        L'app fa una sola cosa: <strong>carica gli short</strong> sui miei canali, inviando a YouTube
+        il file video insieme a titolo, descrizione e tag (metodo <code>videos.insert</code> delle
+        YouTube Data API v3).
+      </p>
+      <p>
+        Non legge statistiche né altri dati del canale, non legge playlist e non modifica né
+        cancella video già pubblicati.
+      </p>
 
-      <h2>Permessi richiesti e perché</h2>
-      <p>Al primo avvio l'app chiede a Google l'autorizzazione per questi ambiti (scope):</p>
+      <h2>Permesso richiesto e perché</h2>
+      <p>Al primo avvio l'app chiede a Google l'autorizzazione per un solo ambito (scope):</p>
       <ul class="scopes">
         <li>
           <code>https://www.googleapis.com/auth/youtube.upload</code>
-          <span class="scope-why">Per caricare i video (short) sui miei canali.</span>
-        </li>
-        <li>
-          <code>https://www.googleapis.com/auth/youtube</code>
-          <span class="scope-why">Per modificare i metadati dei video già caricati (titolo, descrizione, tag, miniatura, playlist, visibilità).</span>
-        </li>
-        <li>
-          <code>https://www.googleapis.com/auth/youtube.readonly</code>
-          <span class="scope-why">Per leggere le informazioni e le statistiche del canale e dei video.</span>
+          <span class="scope-why">Per caricare i video (short) sui miei canali. È l'unico permesso richiesto: consente il caricamento, non l'accesso agli altri dati dell'account.</span>
         </li>
       </ul>
       <div class="callout">
-        I token di accesso e i dati letti restano solo sul mio PC: non vengono inviati a server
-        di terzi, né venduti o condivisi. L'accesso si può revocare in qualsiasi momento da
+        I token di accesso restano solo sul mio PC: non vengono inviati a server di terzi,
+        né venduti o condivisi. L'accesso si può revocare in qualsiasi momento da
         <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.
         Dettagli nella <a href="privacy.html"><strong>Privacy Policy</strong></a>.
       </div>
@@ -183,8 +178,8 @@
       <header class="hero">
         <h1>Shorts</h1>
         <p class="tagline">
-          A personal tool that uses the YouTube Data API v3 to automatically upload and
-          manage Shorts on my YouTube channels.
+          A personal tool that uses the YouTube Data API v3 to automatically upload
+          Shorts to my YouTube channels.
         </p>
         <a class="cta" href="privacy.html">Read the Privacy Policy</a>
         <span class="cta-note">Full details on data, permissions and how to revoke access.</span>
@@ -198,31 +193,27 @@
       </p>
 
       <h2>What it does</h2>
-      <ul>
-        <li><strong>Uploads</strong> Shorts to my channels, including scheduled uploads.</li>
-        <li><strong>Manages metadata</strong>: title, description, tags, thumbnail, playlists, privacy status and publish date.</li>
-        <li><strong>Reads statistics</strong> for the channel and its videos (views, likes, comments, subscribers) to track results.</li>
-      </ul>
+      <p>
+        The app does one thing: it <strong>uploads Shorts</strong> to my channels, sending YouTube
+        the video file together with its title, description and tags (the <code>videos.insert</code>
+        method of the YouTube Data API v3).
+      </p>
+      <p>
+        It does not read statistics or any other channel data, does not read playlists, and
+        does not edit or delete videos that are already published.
+      </p>
 
-      <h2>Permissions requested and why</h2>
-      <p>On first run the app asks Google for authorization for these scopes:</p>
+      <h2>Permission requested and why</h2>
+      <p>On first run the app asks Google for authorization for a single scope:</p>
       <ul class="scopes">
         <li>
           <code>https://www.googleapis.com/auth/youtube.upload</code>
-          <span class="scope-why">To upload videos (Shorts) to my channels.</span>
-        </li>
-        <li>
-          <code>https://www.googleapis.com/auth/youtube</code>
-          <span class="scope-why">To edit the metadata of videos already uploaded (title, description, tags, thumbnail, playlists, privacy status).</span>
-        </li>
-        <li>
-          <code>https://www.googleapis.com/auth/youtube.readonly</code>
-          <span class="scope-why">To read channel and video information and statistics.</span>
+          <span class="scope-why">To upload videos (Shorts) to my channels. It is the only permission requested: it allows uploading, not access to other account data.</span>
         </li>
       </ul>
       <div class="callout">
-        Access tokens and any data read stay only on my PC: they are not sent to third-party
-        servers, sold or shared. Access can be revoked at any time at
+        Access tokens stay only on my PC: they are not sent to third-party servers, sold or
+        shared. Access can be revoked at any time at
         <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.
         See the <a href="privacy.html"><strong>Privacy Policy</strong></a> for details.
       </div>
