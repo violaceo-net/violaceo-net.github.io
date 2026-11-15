@@ -5,49 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shorts – violaceo-net</title>
   <meta name="description" content="Shorts: strumento personale che usa le YouTube Data API v3 per caricare in automatico gli short sui miei canali YouTube.">
-  <script>
-    try { var t = localStorage.getItem('theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (e) {}
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f2f1ee;
-      --bg-raised: #faf9f7;
-      --bg-sunken: #e9e8e4;
-      --ink: #101014;
-      --ink-strong: #000;
-      --muted: #1010149e;
-      --faint: #1010146b;
-      --line: #10101429;
-      --line-strong: #10101466;
-      --accent: #7a4fd0;
-      --invert-bg: #101014;
-      --invert-fg: #f2f1ee;
-      --scanline: #1010140a;
+      --bg: #0a110c; --bg-raised: #0d1610; --bg-sunken: #060b07;
+      --ink: #b6f2c2; --ink-strong: #d6ffde; --muted: #8fdc9fa6; --faint: #8fdc9f66;
+      --line: #5cff7a1c; --line-strong: #5cff7a4d; --accent: #4dff7a;
+      --invert-bg: #4dff7a; --invert-fg: #061008; --scanline: #5cff7a0a;
+      --glow: 0 0 6px rgba(77, 255, 122, .35), 0 0 18px rgba(77, 255, 122, .12);
       --font-display: "VT323", "IBM Plex Mono", ui-monospace, monospace;
       --font-serif: var(--font-display);
       --font-body: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      color-scheme: light;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #121316; --bg-raised: #101014; --bg-sunken: #060607;
-        --ink: #f2f1ee; --ink-strong: #fff; --muted: #f2f1ee99; --faint: #f2f1ee61;
-        --line: #f2f1ee26; --line-strong: #f2f1ee66; --accent: #b08cff;
-        --invert-bg: #fff; --invert-fg: #0b0b0c; --scanline: #ffffff07;
-        color-scheme: dark;
-      }
-    }
-    :root[data-theme="dark"] {
-      --bg: #121316; --bg-raised: #101014; --bg-sunken: #060607;
-      --ink: #f2f1ee; --ink-strong: #fff; --muted: #f2f1ee99; --faint: #f2f1ee61;
-      --line: #f2f1ee26; --line-strong: #f2f1ee66; --accent: #b08cff;
-      --invert-bg: #fff; --invert-fg: #0b0b0c; --scanline: #ffffff07;
       color-scheme: dark;
     }
+    ::selection { background: var(--accent); color: var(--invert-fg); }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; scroll-padding-top: 64px; }
@@ -321,6 +295,11 @@
       html { scroll-behavior: auto; }
       * { transition: none !important; animation: none !important; }
     }
+
+    /* green phosphor glow */
+    .display, .ch h3, .rule h3, .ch-mono, .logo, .hero .h1-en, .sec-head .h2-en, .cta-band .h2-en { text-shadow: var(--glow); }
+    .btn-primary { box-shadow: 0 0 14px rgba(77, 255, 122, .25); }
+    .cursor { box-shadow: 0 0 10px rgba(77, 255, 122, .6); }
   </style>
 </head>
 <body>
@@ -338,9 +317,6 @@
         </nav>
       </div>
       <div class="nav-right">
-        <button class="icon-cell" id="theme" type="button" aria-label="Cambia tema / Toggle theme">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-        </button>
         <a class="btn btn-primary" href="privacy.html">Privacy Policy</a>
       </div>
     </div>
@@ -386,7 +362,7 @@
 
       <div class="wrap">
       <div class="grid channels">
-        <a class="ch" href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener" style="--app:#e8a400">
+        <a class="ch" href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener" style="--app:#4dff7a">
           <div class="ch-screen">
             <span class="corner chip">01</span>
             <span class="corner-r chip">YouTube</span>
@@ -400,7 +376,7 @@
           </div>
         </a>
 
-        <a class="ch" href="https://www.youtube.com/@TakeAway-n5y" target="_blank" rel="noopener" style="--app:#2d81ff">
+        <a class="ch" href="https://www.youtube.com/@TakeAway-n5y" target="_blank" rel="noopener" style="--app:#2fd35c">
           <div class="ch-screen">
             <span class="corner chip">02</span>
             <span class="corner-r chip">YouTube</span>
@@ -414,7 +390,7 @@
           </div>
         </a>
 
-        <a class="ch" href="https://www.youtube.com/@TrueBeers/shorts" target="_blank" rel="noopener" style="--app:#d9682b">
+        <a class="ch" href="https://www.youtube.com/@TrueBeers/shorts" target="_blank" rel="noopener" style="--app:#8dffa8">
           <div class="ch-screen">
             <span class="corner chip">03</span>
             <span class="corner-r chip">YouTube</span>
@@ -428,7 +404,7 @@
           </div>
         </a>
 
-        <a class="ch" href="https://www.youtube.com/@powerbuildingtothepeople1996" target="_blank" rel="noopener" style="--app:#d6334a">
+        <a class="ch" href="https://www.youtube.com/@powerbuildingtothepeople1996" target="_blank" rel="noopener" style="--app:#1fae48">
           <div class="ch-screen">
             <span class="corner chip">04</span>
             <span class="corner-r chip">YouTube</span>
@@ -580,22 +556,6 @@
     </div>
   </footer>
 
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var btn = document.getElementById('theme');
-      function isDark() {
-        if (root.dataset.theme) return root.dataset.theme === 'dark';
-        return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
-      }
-      btn.addEventListener('click', function () {
-        var next = isDark() ? 'light' : 'dark';
-        root.dataset.theme = next;
-        try { localStorage.setItem('theme', next); } catch (e) {}
-        window.dispatchEvent(new Event('themechange'));
-      });
-    })();
-  </script>
 
   <script>
     /* Hero "galaxy": spiral arms with ticks; one card per channel (repeated) travels
