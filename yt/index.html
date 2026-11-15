@@ -203,15 +203,49 @@
       position: relative; display: flex; flex-direction: column;
       background: var(--bg); text-decoration: none; color: inherit;
     }
+    /* CRT tube: bezel + rounded glass; .tube content is barrel-distorted (SVG filter #crt-bulge) */
     .ch-screen {
       position: relative; aspect-ratio: 4 / 3;
-      display: flex; align-items: center; justify-content: center;
+      margin: 12px 12px 0;
+      border-radius: 30px / 26px;
       overflow: hidden;
+      background: #010301;
+      box-shadow: 0 0 0 7px var(--bg-sunken), 0 0 0 8px var(--line);
+    }
+    .tube {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
       background:
         repeating-linear-gradient(0deg, var(--scanline) 0 1px, transparent 1px 3px),
         radial-gradient(120% 90% at 50% 110%, color-mix(in srgb, var(--app) 38%, transparent), transparent 70%),
         var(--bg-sunken);
-      border-bottom: 1px solid var(--line);
+      filter: url(#crt-bulge);
+    }
+    /* rolling interference bar (classic CRT roll), drawn inside the curved glass */
+    .tube::before {
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 28%;
+      z-index: 1; pointer-events: none;
+      background:
+        linear-gradient(180deg, transparent 0, rgba(140, 255, 170, .05) 40%, rgba(170, 255, 195, .16) 50%, rgba(140, 255, 170, .05) 60%, transparent 100%);
+      mix-blend-mode: screen;
+      transform: translateY(-110%);
+      animation: crt-roll 7s linear infinite;
+    }
+    .ch:nth-child(4n+2) .tube::before { animation-duration: 8.5s; animation-delay: -2.4s; }
+    .ch:nth-child(4n+3) .tube::before { animation-duration: 6.2s; animation-delay: -4.1s; }
+    .ch:nth-child(4n+4) .tube::before { animation-duration: 9.3s; animation-delay: -6.6s; }
+    @keyframes crt-roll {
+      0%   { transform: translateY(-110%); }
+      70%  { transform: translateY(380%); }
+      100% { transform: translateY(380%); }
+    }
+    .ch-screen::after {
+      content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 26% at 34% 12%, rgba(220, 255, 230, .13), transparent 70%),
+        radial-gradient(ellipse 55% 50% at 50% 46%, rgba(140, 255, 170, .07), transparent 72%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, transparent 48%, rgba(0, 0, 0, .72) 100%);
+      box-shadow: inset 0 0 36px rgba(0, 0, 0, .85), inset 0 0 0 1px rgba(92, 255, 122, .18);
     }
     .ch-mono {
       font-family: var(--font-display); font-weight: 400;
@@ -221,9 +255,9 @@
     }
     .ch-mono em { font-family: var(--font-display); font-style: normal; font-weight: 400; color: var(--app); letter-spacing: 0; }
     .ch:hover .ch-mono { transform: scale(1.06); }
-    .ch-screen .corner { position: absolute; top: 12px; left: 12px; }
-    .ch-screen .corner-r { position: absolute; top: 12px; right: 12px; }
-    .ch-body { display: flex; flex-direction: column; gap: 10px; padding: 22px 22px 24px; flex: 1; }
+    .ch-screen .corner { position: absolute; top: 18px; left: 20px; }
+    .ch-screen .corner-r { position: absolute; top: 18px; right: 20px; }
+    .ch-body { display: flex; flex-direction: column; gap: 10px; padding: 26px 22px 24px; flex: 1; }
     .ch-title { display: flex; align-items: center; gap: 10px; }
     .ch-dot { width: 22px; height: 22px; background: var(--app); flex: none; }
     .ch h3 { font-family: var(--font-display); font-weight: 400; font-size: 2.1rem; letter-spacing: 0; line-height: 1; margin: 0; color: var(--ink-strong); overflow-wrap: anywhere; }
@@ -313,6 +347,14 @@
 </head>
 <body>
 
+  <!-- CRT barrel distortion used by .tube (displacement map built by the script below) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="crt-bulge" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+      <feImage id="crt-map" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
   <!-- ============================ NAV ============================ -->
   <header class="nav">
     <div class="nav-row">
@@ -371,11 +413,11 @@
       <div class="wrap">
       <div class="grid channels">
         <a class="ch" href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener" style="--app:#4dff7a">
-          <div class="ch-screen">
+          <div class="ch-screen"><div class="tube">
             <span class="corner chip">01</span>
             <span class="corner-r chip">YouTube</span>
             <span class="ch-mono" aria-hidden="true">F<em>a</em></span>
-          </div>
+          </div></div>
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>Faaaaacts</h3></div>
             <p class="handle">@faaaaacts</p>
@@ -385,11 +427,11 @@
         </a>
 
         <a class="ch" href="https://www.youtube.com/@TakeAway-n5y" target="_blank" rel="noopener" style="--app:#2fd35c">
-          <div class="ch-screen">
+          <div class="ch-screen"><div class="tube">
             <span class="corner chip">02</span>
             <span class="corner-r chip">YouTube</span>
             <span class="ch-mono" aria-hidden="true">T<em>a</em></span>
-          </div>
+          </div></div>
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>TakeAway</h3></div>
             <p class="handle">@TakeAway-n5y</p>
@@ -399,11 +441,11 @@
         </a>
 
         <a class="ch" href="https://www.youtube.com/@TrueBeers/shorts" target="_blank" rel="noopener" style="--app:#8dffa8">
-          <div class="ch-screen">
+          <div class="ch-screen"><div class="tube">
             <span class="corner chip">03</span>
             <span class="corner-r chip">YouTube</span>
             <span class="ch-mono" aria-hidden="true">T<em>b</em></span>
-          </div>
+          </div></div>
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>TrueBeers</h3></div>
             <p class="handle">@TrueBeers</p>
@@ -413,11 +455,11 @@
         </a>
 
         <a class="ch" href="https://www.youtube.com/@powerbuildingtothepeople1996" target="_blank" rel="noopener" style="--app:#1fae48">
-          <div class="ch-screen">
+          <div class="ch-screen"><div class="tube">
             <span class="corner chip">04</span>
             <span class="corner-r chip">YouTube</span>
             <span class="ch-mono" aria-hidden="true">P<em>p</em></span>
-          </div>
+          </div></div>
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>Powerbuilding to the People</h3></div>
             <p class="handle">@powerbuildingtothepeople1996</p>
@@ -875,6 +917,47 @@
 
   <script>
     if (location.hash === '#tecnico') { var d = document.getElementById('tecnico'); if (d) d.open = true; }
+  </script>
+
+  <script>
+    /* Builds the barrel-distortion map for #crt-bulge: each output pixel samples the
+       source further from the centre (p * (1 + K r^2) / (1 + K)), so content bulges and the
+       corners curve away, like the glass of a CRT. */
+    (function () {
+      var K = 0.12;
+      var tube = document.querySelector('.tube');
+      var map = document.getElementById('crt-map');
+      var disp = map && map.nextElementSibling;
+      if (!tube || !map || !disp) return;
+      function build() {
+        var w = tube.offsetWidth, h = tube.offsetHeight;
+        if (!w || !h) return;
+        var N = 128, M = Math.max(2, Math.round(N * h / w));
+        var c = document.createElement('canvas'); c.width = N; c.height = M;
+        var ctx = c.getContext('2d'), img = ctx.createImageData(N, M), d = img.data;
+        var S = 2 * K * Math.max(w, h);                 // max displacement span in px
+        for (var y = 0; y < M; y++) for (var x = 0; x < N; x++) {
+          var nx = (x + .5) / N * 2 - 1, ny = (y + .5) / M * 2 - 1, r2 = nx * nx + ny * ny;
+          var f = (1 + K * r2) / (1 + K) - 1;                       // centre magnified, mid-edges fixed
+          var dx = nx * f * w / 2, dy = ny * f * h / 2;  // px
+          var i = (y * N + x) * 4;
+          d[i]     = Math.max(0, Math.min(255, Math.round(127.5 + dx / S * 255)));
+          d[i + 1] = Math.max(0, Math.min(255, Math.round(127.5 + dy / S * 255)));
+          d[i + 2] = 0; d[i + 3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+        map.setAttribute('x', 0); map.setAttribute('y', 0);
+        map.setAttribute('width', w); map.setAttribute('height', h);
+        map.setAttribute('href', c.toDataURL());
+        map.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', c.toDataURL());
+        disp.setAttribute('scale', S);
+        document.getElementById('crt-bulge').setAttribute('filterUnits', 'userSpaceOnUse');
+        var f = document.getElementById('crt-bulge');
+        f.setAttribute('x', 0); f.setAttribute('y', 0); f.setAttribute('width', w); f.setAttribute('height', h);
+      }
+      build();
+      if (window.ResizeObserver) new ResizeObserver(build).observe(tube); else window.addEventListener('resize', build);
+    })();
   </script>
 </body>
 </html>
