@@ -243,6 +243,9 @@
     .rules { display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
     @media (min-width: 768px) { .rules { grid-template-columns: repeat(2, 1fr); } }
     @media (min-width: 1100px) { .rules { grid-template-columns: repeat(4, 1fr); } }
+    /* 5-step pipeline: last card spans the row on 2 columns, 5 columns on wide screens */
+    @media (min-width: 768px) and (max-width: 1099px) { .rules.five .rule:last-child { grid-column: span 2; } }
+    @media (min-width: 1100px) { .rules.five { grid-template-columns: repeat(5, 1fr); } }
     .rule { background: var(--bg); padding: 28px 24px 32px; }
     .rule .n { color: var(--accent); }
     .rule h3 { font-family: var(--font-display); font-weight: 400; letter-spacing: 0; font-size: 1.9rem; line-height: 1; margin: 18px 0 10px; color: var(--ink-strong); }
@@ -346,7 +349,7 @@
           <a class="btn btn-ghost" href="#pipeline">Come funziona / How it works ↓</a>
         </div>
         <div class="hero-meta hud">
-          <span>Crea → Rifinisci → Pubblica</span><span>·</span><span lang="en">Create → Polish → Publish</span>
+          <span>Crea → Genera → Controlla → Pubblica</span><span>·</span><span lang="en">Create → Generate → Review → Publish</span>
         </div>
       </div>
     </section>
@@ -436,39 +439,45 @@
         </div>
         <div>
           <p>
-            Shorts è una pipeline di creazione e pubblicazione per canali YouTube: prende un'idea,
-            la trasforma in uno short pronto da pubblicare e lo mette online sul canale giusto, in automatico.
-            Un solo flusso per tutti i canali.
+            Shorts è una pipeline di creazione e pubblicazione per canali YouTube: genera le idee,
+            le trasforma in short pronti da pubblicare e li mette online sul canale giusto.
+            In automatico, oppure con il tuo controllo passo per passo. Un solo flusso per tutti i canali.
           </p>
           <p lang="en">
-            Shorts is a creation and publishing pipeline for YouTube channels: it takes an idea, turns it
-            into a ready-to-publish Short and puts it online on the right channel, automatically.
-            One flow for every channel.
+            Shorts is a creation and publishing pipeline for YouTube channels: it generates ideas, turns them
+            into ready-to-publish Shorts and puts them online on the right channel.
+            Fully automatic, or with your step-by-step review. One flow for every channel.
           </p>
         </div>
       </div>
 
-      <div class="rules">
+      <div class="rules five">
         <div class="rule">
           <span class="n hud">01</span>
           <h3>Crea</h3>
-          <p>Ogni short nasce in formato verticale, pronto per YouTube.</p>
-          <p class="en" lang="en">Create: every Short is made in vertical format, ready for YouTube.</p>
+          <p>Fai generare nuove idee di pubblicazione e approva quelle giuste: solo le idee approvate entrano nella pipeline di generazione.</p>
+          <p class="en" lang="en">Create: generate new publishing ideas and approve the right ones; only approved ideas enter the generation pipeline.</p>
         </div>
         <div class="rule">
           <span class="n hud">02</span>
-          <h3>Rifinisci</h3>
-          <p>Titolo, descrizione e tag preparati per ogni video.</p>
-          <p class="en" lang="en">Polish: title, description and tags prepared for every video.</p>
+          <h3>Genera</h3>
+          <p>Ogni short nasce in formato verticale, pronto per YouTube, già completo di titolo, descrizione, hashtag e tag pensati per la retention e per raggiungere il pubblico più ampio possibile.</p>
+          <p class="en" lang="en">Generate: every Short is made in vertical format, ready for YouTube, complete with title, description, hashtags and tags designed for retention and the widest possible audience.</p>
         </div>
         <div class="rule">
           <span class="n hud">03</span>
+          <h3>Controllo</h3>
+          <p>Guarda in anteprima ogni video e decidi se mandarlo nella pipeline di pubblicazione, oppure lascia alla pipeline il controllo totale.</p>
+          <p class="en" lang="en">Review: preview every video and decide whether to send it to the publishing pipeline, or leave the pipeline in full control.</p>
+        </div>
+        <div class="rule">
+          <span class="n hud">04</span>
           <h3>Pubblica</h3>
           <p>Caricamento automatico sul canale giusto, senza passaggi manuali.</p>
           <p class="en" lang="en">Publish: automatic upload to the right channel, no manual steps.</p>
         </div>
         <div class="rule">
-          <span class="n hud">04</span>
+          <span class="n hud">05</span>
           <h3>Scala</h3>
           <p>Nuovo canale? Entra nel flusso e parte subito.</p>
           <p class="en" lang="en">Scale: a new channel joins the flow and starts right away.</p>
@@ -601,7 +610,7 @@
     </div>
     <div class="wrap foot-bottom hud">
       <span>© 2026 violaceo-net</span>
-      <span>Crea → Rifinisci → Pubblica</span>
+      <span>Crea → Genera → Controlla → Pubblica</span>
     </div>
   </footer>
 
