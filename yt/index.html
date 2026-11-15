@@ -177,7 +177,7 @@
     section.block { border-bottom: 1px solid var(--line); }
     .sec-head {
       display: grid; gap: 20px;
-      padding: 72px 0 40px;
+      padding-top: 72px; padding-bottom: 40px;
     }
     @media (min-width: 900px) { .sec-head { grid-template-columns: 1fr 1fr; align-items: end; } }
     .sec-num { color: var(--muted); }
@@ -270,13 +270,19 @@
     .scope li .x { font-family: var(--font-mono); color: var(--faint); flex: none; }
     .scope li small { display: block; color: var(--faint); font-size: .85rem; }
 
-    /* --- privacy CTA ----------------------------------------------- */
-    .cta-band { padding: 88px 0; text-align: center; position: relative; }
-    .cta-band h2 { font-size: clamp(3rem, 7.5vw, 5.8rem); }
-    .cta-band .h2-en { margin-top: 10px; font-family: var(--font-serif); font-style: normal; font-size: 1.75rem; color: var(--muted); }
-    .cta-band p { color: var(--muted); max-width: 38rem; margin: 22px auto 0; }
-    .cta-band p.en { color: var(--faint); margin-top: 8px; font-size: .95rem; }
-    .cta-band .hero-ctas { margin-top: 30px; }
+    /* --- technical details (collapsed by default) ------------------ */
+    .tech > summary { display: block; list-style: none; cursor: pointer; padding-bottom: 64px; }
+    .tech > summary::-webkit-details-marker { display: none; }
+    .tech > summary:focus { outline: none; }
+    .tech > summary:focus-visible .btn { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .tech > summary:hover .btn-ghost { background: var(--invert-bg); color: var(--invert-fg); border-color: transparent; }
+    .tech .when-open { display: none; }
+    .tech[open] .when-open { display: inline; }
+    .tech[open] .when-closed { display: none; }
+    .tech[open] > summary { padding-bottom: 8px; }
+    .tech-label { margin: 0 auto; padding-top: 32px; padding-bottom: 14px; color: var(--faint); }
+    .tech .scope:last-child > div { padding-bottom: 56px; }
+    .scope a { color: var(--ink-strong); text-decoration-color: var(--accent); text-underline-offset: 3px; }
 
     /* --- footer ---------------------------------------------------- */
     footer { background: var(--bg-sunken); }
@@ -297,7 +303,7 @@
     }
 
     /* green phosphor glow */
-    .display, .ch h3, .rule h3, .ch-mono, .logo, .hero .h1-en, .sec-head .h2-en, .cta-band .h2-en { text-shadow: var(--glow); }
+    .display, .ch h3, .rule h3, .ch-mono, .logo, .hero .h1-en, .sec-head .h2-en { text-shadow: var(--glow); }
     .btn-primary { box-shadow: 0 0 14px rgba(77, 255, 122, .25); }
     .cursor { box-shadow: 0 0 10px rgba(77, 255, 122, .6); }
   </style>
@@ -311,9 +317,8 @@
         <a class="logo" href="../" title="violaceo-net – Progetti"><i class="logo-mark" aria-hidden="true"></i>Shorts</a>
         <nav class="nav-links hud" aria-label="Sezioni">
           <a href="#canali"><span>Canali</span></a>
-          <a href="#app"><span>L'app</span></a>
+          <a href="#pipeline"><span>Pipeline</span></a>
           <a href="#permessi"><span>Permessi</span></a>
-          <a href="#privacy"><span>Privacy</span></a>
         </nav>
       </div>
       <div class="nav-right">
@@ -332,16 +337,16 @@
         <h1 class="display">Tanti canali. <span class="serif">Un solo</span> flusso.<span class="cursor" aria-hidden="true"></span></h1>
         <p class="h1-en" lang="en">Many channels. One pipeline.</p>
         <p class="lede">
-          Shorts è il mio strumento personale che usa le YouTube Data API v3 per caricare
-          in automatico gli short sui miei canali YouTube.
-          <span lang="en">Shorts is my personal tool that uses the YouTube Data API v3 to automatically upload Shorts to my YouTube channels.</span>
+          Shorts è una pipeline di creazione e pubblicazione per canali YouTube:
+          dall'idea allo short online, in automatico, su tutti i miei canali.
+          <span lang="en">Shorts is a creation and publishing pipeline for YouTube channels: from idea to published Short, automatically, across all my channels.</span>
         </p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#canali">Vedi i canali / Channels ↓</a>
-          <a class="btn btn-ghost" href="privacy.html">Privacy Policy ↗</a>
+          <a class="btn btn-ghost" href="#pipeline">Come funziona / How it works ↓</a>
         </div>
         <div class="hero-meta hud">
-          <span>YouTube Data API v3</span><span>·</span><span>youtube.upload</span><span>·</span><span>Uso personale / Personal use</span>
+          <span>Crea → Rifinisci → Pubblica</span><span>·</span><span lang="en">Create → Polish → Publish</span>
         </div>
       </div>
     </section>
@@ -421,22 +426,24 @@
       </div>
     </section>
 
-    <!-- ============================ 02 APP ============================ -->
-    <section class="block" id="app">
+    <!-- ============================ 02 PIPELINE ============================ -->
+    <section class="block" id="pipeline">
       <div class="wrap sec-head">
         <div>
-          <span class="sec-num hud"><b>02</b>/L'app · The app</span>
-          <h2 class="display">Fa <span class="serif">una</span> cosa sola.</h2>
-          <p class="h2-en" lang="en">It does one thing.</p>
+          <span class="sec-num hud"><b>02</b>/Pipeline</span>
+          <h2 class="display">Dall'idea allo <span class="serif">Short</span> online.</h2>
+          <p class="h2-en" lang="en">From idea to published Short.</p>
         </div>
         <div>
           <p>
-            Shorts è un'applicazione desktop ad uso esclusivamente personale. Gira solo sul mio PC
-            e carica gli short sui canali qui sopra, dopo che ho autorizzato l'accesso con il login Google (OAuth 2.0).
+            Shorts è una pipeline di creazione e pubblicazione per canali YouTube: prende un'idea,
+            la trasforma in uno short pronto da pubblicare e lo mette online sul canale giusto, in automatico.
+            Un solo flusso per tutti i canali.
           </p>
           <p lang="en">
-            Shorts is a desktop application for personal use only. It runs only on my PC and uploads
-            Shorts to the channels above, after I authorize access through Google sign-in (OAuth 2.0).
+            Shorts is a creation and publishing pipeline for YouTube channels: it takes an idea, turns it
+            into a ready-to-publish Short and puts it online on the right channel, automatically.
+            One flow for every channel.
           </p>
         </div>
       </div>
@@ -444,27 +451,27 @@
       <div class="rules">
         <div class="rule">
           <span class="n hud">01</span>
-          <h3>Solo caricamento</h3>
-          <p>Invia a YouTube il file video con titolo, descrizione e tag, tramite <code>videos.insert</code>.</p>
-          <p class="en" lang="en">Upload only: sends YouTube the video file with title, description and tags via <code>videos.insert</code>.</p>
+          <h3>Crea</h3>
+          <p>Ogni short nasce in formato verticale, pronto per YouTube.</p>
+          <p class="en" lang="en">Create: every Short is made in vertical format, ready for YouTube.</p>
         </div>
         <div class="rule">
           <span class="n hud">02</span>
-          <h3>Nessuna lettura</h3>
-          <p>Non legge statistiche, dati del canale, playlist o commenti.</p>
-          <p class="en" lang="en">No reading: it does not read statistics, channel data, playlists or comments.</p>
+          <h3>Rifinisci</h3>
+          <p>Titolo, descrizione e tag preparati per ogni video.</p>
+          <p class="en" lang="en">Polish: title, description and tags prepared for every video.</p>
         </div>
         <div class="rule">
           <span class="n hud">03</span>
-          <h3>Nessuna modifica</h3>
-          <p>Non modifica né cancella video già pubblicati.</p>
-          <p class="en" lang="en">No edits: it does not edit or delete videos that are already published.</p>
+          <h3>Pubblica</h3>
+          <p>Caricamento automatico sul canale giusto, senza passaggi manuali.</p>
+          <p class="en" lang="en">Publish: automatic upload to the right channel, no manual steps.</p>
         </div>
         <div class="rule">
           <span class="n hud">04</span>
-          <h3>Tutto in locale</h3>
-          <p>I token restano solo sul mio PC. Niente server, niente vendita, niente condivisione con terzi.</p>
-          <p class="en" lang="en">All local: tokens stay only on my PC. No server, no selling, no sharing with third parties.</p>
+          <h3>Scala</h3>
+          <p>Nuovo canale? Entra nel flusso e parte subito.</p>
+          <p class="en" lang="en">Scale: a new channel joins the flow and starts right away.</p>
         </div>
       </div>
     </section>
@@ -478,49 +485,92 @@
           <p class="h2-en" lang="en">A single permission.</p>
         </div>
         <div>
-          <p>Al primo avvio l'app chiede a Google l'autorizzazione per un solo ambito OAuth.</p>
-          <p lang="en">On first run the app asks Google for authorization for a single OAuth scope.</p>
+          <p>
+            Per pubblicare, Shorts chiede a Google un solo permesso: caricare video.
+            Nient'altro: nessuna statistica, nessun commento, nessuna modifica ai video esistenti.
+          </p>
+          <p lang="en">
+            To publish, Shorts asks Google for a single permission: uploading videos.
+            Nothing else: no statistics, no comments, no changes to existing videos.
+          </p>
         </div>
       </div>
 
-      <div class="scope">
-        <div>
-          <span class="hud" style="color:var(--faint)">Scope richiesto · Requested scope</span>
-          <code>https://www.googleapis.com/auth/youtube.upload</code>
-          <p>Serve a caricare i video (short) sui miei canali. Consente il caricamento, non l'accesso agli altri dati dell'account.</p>
-          <p class="en" lang="en">Used to upload videos (Shorts) to my channels. It allows uploading, not access to other account data.</p>
-        </div>
-        <div>
-          <span class="hud" style="color:var(--faint)">Non richiesti · Not requested</span>
-          <ul>
-            <li><span class="x">✕</span><span>Lettura di statistiche e dati del canale<small lang="en">Reading statistics and channel data</small></span></li>
-            <li><span class="x">✕</span><span>Modifica o cancellazione di video<small lang="en">Editing or deleting videos</small></span></li>
-            <li><span class="x">✕</span><span>Playlist, commenti, iscritti<small lang="en">Playlists, comments, subscribers</small></span></li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      <details class="tech" id="tecnico">
+        <summary class="wrap">
+          <span class="btn btn-ghost">
+            <span class="when-closed">Dettagli tecnici · Technical details ↓</span>
+            <span class="when-open">Nascondi dettagli · Hide details ↑</span>
+          </span>
+        </summary>
 
-    <!-- ============================ 04 PRIVACY ============================ -->
-    <section class="block" id="privacy">
-      <div class="wrap cta-band">
-        <span class="sec-num hud"><b>04</b>/Privacy</span>
-        <h2 class="display" style="margin-top:18px">I tuoi dati, <span class="serif">sul mio PC.</span></h2>
-        <p class="h2-en" lang="en">Your data, on my PC.</p>
-        <p>
-          La privacy policy spiega quali dati tratta l'app, dove vengono conservati, l'aderenza alla
-          Google API Services User Data Policy (Limited Use) e come revocare l'accesso da
-          <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.
-        </p>
-        <p class="en" lang="en">
-          The privacy policy explains what data the app processes, where it is stored, its adherence to the
-          Google API Services User Data Policy (Limited Use) and how to revoke access.
-        </p>
-        <div class="hero-ctas">
-          <a class="btn btn-primary" href="privacy.html">Leggi la Privacy Policy / Read it</a>
-          <a class="btn btn-ghost" href="https://myaccount.google.com/permissions">Revoca accesso / Revoke ↗</a>
+        <p class="wrap tech-label hud">Cosa fa l'app · What the app does</p>
+        <div class="rules">
+          <div class="rule">
+            <span class="n hud">01</span>
+            <h3>Solo caricamento</h3>
+            <p>Invia a YouTube il file video con titolo, descrizione e tag, tramite <code>videos.insert</code>.</p>
+            <p class="en" lang="en">Upload only: sends YouTube the video file with title, description and tags via <code>videos.insert</code>.</p>
+          </div>
+          <div class="rule">
+            <span class="n hud">02</span>
+            <h3>Nessuna lettura</h3>
+            <p>Non legge statistiche, dati del canale, playlist o commenti.</p>
+            <p class="en" lang="en">No reading: it does not read statistics, channel data, playlists or comments.</p>
+          </div>
+          <div class="rule">
+            <span class="n hud">03</span>
+            <h3>Nessuna modifica</h3>
+            <p>Non modifica né cancella video già pubblicati.</p>
+            <p class="en" lang="en">No edits: it does not edit or delete videos that are already published.</p>
+          </div>
+          <div class="rule">
+            <span class="n hud">04</span>
+            <h3>Tutto in locale</h3>
+            <p>I token restano solo sul PC dove gira l'app. Niente server, niente vendita, niente condivisione con terzi.</p>
+            <p class="en" lang="en">All local: tokens stay only on the PC running the app. No server, no selling, no sharing with third parties.</p>
+          </div>
         </div>
-      </div>
+
+        <p class="wrap tech-label hud">Scope OAuth · OAuth scope</p>
+        <div class="scope">
+          <div>
+            <span class="hud" style="color:var(--faint)">Scope richiesto · Requested scope</span>
+            <code>https://www.googleapis.com/auth/youtube.upload</code>
+            <p>Serve a caricare i video (short) sui miei canali. Consente il caricamento, non l'accesso agli altri dati dell'account.</p>
+            <p class="en" lang="en">Used to upload videos (Shorts) to my channels. It allows uploading, not access to other account data.</p>
+          </div>
+          <div>
+            <span class="hud" style="color:var(--faint)">Non richiesti · Not requested</span>
+            <ul>
+              <li><span class="x">✕</span><span>Lettura di statistiche e dati del canale<small lang="en">Reading statistics and channel data</small></span></li>
+              <li><span class="x">✕</span><span>Modifica o cancellazione di video<small lang="en">Editing or deleting videos</small></span></li>
+              <li><span class="x">✕</span><span>Playlist, commenti, iscritti<small lang="en">Playlists, comments, subscribers</small></span></li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="wrap tech-label hud">Dati e privacy · Data &amp; privacy</p>
+        <div class="scope">
+          <div>
+            <p style="margin-top:0">
+              L'uso e il trasferimento delle informazioni ricevute dalle API di Google rispettano la
+              <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+              inclusi i requisiti di Limited Use. I dati non vengono venduti né condivisi con terzi.
+            </p>
+            <p class="en" lang="en">
+              Use and transfer of information received from Google APIs adhere to the Google API Services
+              User Data Policy, including the Limited Use requirements. Data is never sold or shared with third parties.
+            </p>
+          </div>
+          <div>
+            <ul style="margin-top:0">
+              <li><span class="x">→</span><span><a href="privacy.html">Privacy Policy</a><small lang="en">Full privacy policy</small></span></li>
+              <li><span class="x">→</span><span><a href="https://myaccount.google.com/permissions">Revoca accesso</a><small lang="en">Revoke access (Google Account)</small></span></li>
+            </ul>
+          </div>
+        </div>
+      </details>
     </section>
   </main>
 
@@ -529,8 +579,8 @@
     <div class="foot">
       <div>
         <a class="logo" href="../" style="padding:0;border:0"><i class="logo-mark" aria-hidden="true"></i>Shorts</a>
-        <p class="tag">Strumento personale per caricare short su YouTube. Non affiliato a YouTube o Google.</p>
-        <p class="tag" lang="en" style="color:var(--faint);margin-top:6px">Personal tool to upload Shorts to YouTube. Not affiliated with YouTube or Google.</p>
+        <p class="tag">Pipeline di creazione e pubblicazione per canali YouTube. Non affiliato a YouTube o Google.</p>
+        <p class="tag" lang="en" style="color:var(--faint);margin-top:6px">Creation and publishing pipeline for YouTube channels. Not affiliated with YouTube or Google.</p>
       </div>
       <div>
         <h4 class="hud">Canali · Channels</h4>
@@ -545,14 +595,13 @@
         <h4 class="hud">Info</h4>
         <ul>
           <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="https://myaccount.google.com/permissions">Revoca accesso · Revoke access</a></li>
           <li><a href="../">violaceo-net – Progetti</a></li>
         </ul>
       </div>
     </div>
     <div class="wrap foot-bottom hud">
       <span>© 2026 violaceo-net</span>
-      <span>YouTube Data API v3 · youtube.upload</span>
+      <span>Crea → Rifinisci → Pubblica</span>
     </div>
   </footer>
 
@@ -813,6 +862,10 @@
       else start();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (reduce) draw(); });
     })();
+  </script>
+
+  <script>
+    if (location.hash === '#tecnico') { var d = document.getElementById('tecnico'); if (d) d.open = true; }
   </script>
 </body>
 </html>
