@@ -309,8 +309,6 @@
     .ch-social:hover { background: var(--invert-bg); color: var(--invert-fg); border-color: transparent; }
     .ch-social:hover b, .ch-social:hover small { color: var(--invert-fg); }
     .ch-social:hover .ig-ico { background: var(--invert-fg); border-color: transparent; filter: none; }
-    .ch-lead { margin: 2px 0 0; color: var(--ink); font-size: .92rem; line-height: 1.55; }
-    .ch-lead span { display: block; margin-top: 4px; color: var(--faint); font-size: .85rem; }
     .ch-more { position: relative; z-index: 2; }
     .ch-more > summary { list-style: none; cursor: pointer; color: var(--accent); width: fit-content; padding: 2px 0; }
     .ch-more > summary::-webkit-details-marker { display: none; }
@@ -319,6 +317,10 @@
     .ch-more[open] .when-open { display: inline; }
     .ch-more[open] .when-closed { display: none; }
     .ch-desc p { margin: 10px 0 0; color: var(--muted); font-size: .85rem; line-height: 1.6; }
+    .ch-desc p.first { color: var(--ink); }
+    .ch-desc .en p.first { color: var(--muted); }
+    /* reserve two lines for the channel name so handles and "Leggi tutto" line up across cards */
+    @media (min-width: 601px) { .ch-title { min-height: 4.2rem; align-items: flex-end; } }
     .ch-desc .en { margin-top: 14px; padding-top: 4px; border-top: 1px dashed var(--line); }
     .ch-desc .en p { color: var(--faint); }
     /* terminal typing on the monitor (hover on desktop, scroll-into-view on touch) */
@@ -480,7 +482,7 @@
 
       <div class="wrap">
       <div class="grid channels">
-        <div class="ch" style="--app:#4dff7a" data-type="Un fatto vero in meno di un minuto.">
+        <div class="ch" style="--app:#4dff7a" data-type="Un fatto vero in meno di un minuto." data-type-en="One true fact in under a minute.">
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">01</span>
             <span class="corner-r chip">YouTube</span>
@@ -490,14 +492,15 @@
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>Faaaaacts</h3></div>
             <p class="handle">@faaaaacts</p>
-            <p class="ch-lead">Un fatto vero in meno di un minuto.<span lang="en">One true fact in under a minute.</span></p>
             <details class="ch-more">
               <summary class="hud"><span class="when-closed">Leggi tutto · Read more ↓</span><span class="when-open">Chiudi · Close ↑</span></summary>
               <div class="ch-desc">
+                <p class="first">Un fatto vero in meno di un minuto.</p>
                 <p>Cosa è successo oggi nella storia, chi è nato in questo giorno, una scoperta della scienza e le curiosità di «Lo sapevi che?»: dalle grandi date ai dettagli che non trovi sui libri di scuola.</p>
                 <p>Ogni short nasce da una pagina di Wikipedia, con le foto libere di Wikimedia Commons. Testi e voce sono preparati con l’aiuto dell’intelligenza artificiale: se trovi un errore, scrivilo nei commenti e lo correggiamo.</p>
                 <p>Nuovi fatti ogni giorno.</p>
                 <div class="en" lang="en">
+                  <p class="first">One true fact in under a minute.</p>
                   <p>What happened today in history, who was born on this day, a scientific discovery and “Did you know?” trivia: from the big dates to the details you won’t find in school books.</p>
                   <p>Every Short starts from a Wikipedia page, with free images from Wikimedia Commons. Scripts and voice are prepared with the help of AI: if you spot a mistake, tell us in the comments and we’ll fix it.</p>
                   <p>New facts every day.</p>
@@ -509,7 +512,7 @@
           </div>
         </div>
 
-        <div class="ch" style="--app:#2fd35c" data-type="Ricette illustrate ad acquerello, in un minuto.">
+        <div class="ch" style="--app:#2fd35c" data-type="Ricette illustrate ad acquerello, in un minuto." data-type-en="Watercolour-illustrated recipes, in one minute.">
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">02</span>
             <span class="corner-r chip">YouTube</span>
@@ -519,14 +522,15 @@
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>TakeAway</h3></div>
             <p class="handle">@TakeAway-n5y</p>
-            <p class="ch-lead">Ricette illustrate ad acquerello, in un minuto.<span lang="en">Watercolour-illustrated recipes, in one minute.</span></p>
             <details class="ch-more">
               <summary class="hud"><span class="when-closed">Leggi tutto · Read more ↓</span><span class="when-open">Chiudi · Close ↑</span></summary>
               <div class="ch-desc">
+                <p class="first">Ricette illustrate ad acquerello, in un minuto.</p>
                 <p>Colazione, pranzo e cena: un piatto al giorno, dai classici delle regioni italiane, dalla Campania alla Toscana, a qualche viaggio fuori confine.</p>
                 <p>Ogni short ha la lista della spesa, i passaggi uno per uno e il consiglio dello chef. Nella descrizione trovi la ricetta intera, con dosi e allergeni, pronta da salvare.</p>
                 <p>Ogni ricetta è controllata a mano prima di uscire. Illustrazioni e voce sono fatte con l’intelligenza artificiale; il piatto, invece, tocca a te.</p>
                 <div class="en" lang="en">
+                  <p class="first">Watercolour-illustrated recipes, in one minute.</p>
                   <p>Breakfast, lunch and dinner: one dish a day, from the classics of Italy’s regions, from Campania to Tuscany, plus the odd trip abroad.</p>
                   <p>Every Short has the shopping list, the steps one by one and the chef’s tip. The video description has the full recipe, with quantities and allergens, ready to save.</p>
                   <p>Every recipe is checked by hand before it goes out. Illustrations and voice are made with AI; the cooking, though, is up to you.</p>
@@ -539,7 +543,7 @@
           </div>
         </div>
 
-        <div class="ch" style="--app:#8dffa8" data-type="Ogni birra ha un luogo di nascita.">
+        <div class="ch" style="--app:#8dffa8" data-type="Ogni birra ha un luogo di nascita." data-type-en="Every beer has a birthplace.">
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">03</span>
             <span class="corner-r chip">YouTube</span>
@@ -549,14 +553,15 @@
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>TrueBeers</h3></div>
             <p class="handle">@TrueBeers</p>
-            <p class="ch-lead">Ogni birra ha un luogo di nascita.<span lang="en">Every beer has a birthplace.</span></p>
             <details class="ch-more">
               <summary class="hud"><span class="when-closed">Leggi tutto · Read more ↓</span><span class="when-open">Chiudi · Close ↑</span></summary>
               <div class="ch-desc">
+                <p class="first">Ogni birra ha un luogo di nascita.</p>
                 <p>True Beers racconta le storie d’origine degli stili di birra e delle birre più famose (IPA, Pilsner, Lambic, trappiste, Budvar, Tsingtao e altre) su mappe animate: dove sono nate, perché proprio lì e come hanno girato il mondo.</p>
                 <p>Una storia al giorno, in meno di un minuto, più qualche racconto su mappa più lungo ogni tanto. Ogni storia viene verificata sulle fonti prima di uscire e, quando storia e leggenda non coincidono, ti diciamo quale è quale.</p>
                 <p>Mappe da NASA Blue Marble e Natural Earth. Narrazione e illustrazioni sono realizzate con strumenti di intelligenza artificiale; i fatti no. Bevi responsabilmente.</p>
                 <div class="en" lang="en">
+                  <p class="first">Every beer has a birthplace.</p>
                   <p>True Beers tells the origin stories of beer styles and famous brews (IPA, Pilsner, Lambic, Trappist ales, Budvar, Tsingtao and more) on animated maps: where it was born, why there, and how it travelled the world.</p>
                   <p>One story a day, under a minute, plus longer map stories now and then. Every story is checked against its sources before it goes out, and when history and legend disagree, we tell you which is which.</p>
                   <p>Maps from NASA Blue Marble and Natural Earth. Narration and illustrations are made with AI tools; the facts are not. Please drink responsibly.</p>
@@ -569,7 +574,7 @@
           </div>
         </div>
 
-        <div class="ch" style="--app:#1fae48" data-type="Nove anni di diari di allenamento di un sollevatore amatoriale, dal 2017 a oggi.">
+        <div class="ch" style="--app:#1fae48" data-type="Nove anni di diari di allenamento di un sollevatore amatoriale, dal 2017 a oggi." data-type-en="Nine years of training logs from one amateur lifter, 2017 to today.">
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">04</span>
             <span class="corner-r chip">YouTube</span>
@@ -579,14 +584,15 @@
           <div class="ch-body">
             <div class="ch-title"><i class="ch-dot" aria-hidden="true"></i><h3>Powerbuilding to the People</h3></div>
             <p class="handle">@powerbuildingtothepeople1996</p>
-            <p class="ch-lead">Nove anni di diari di allenamento di un sollevatore amatoriale, dal 2017 a oggi.<span lang="en">Nine years of training logs from one amateur lifter, 2017 to today.</span></p>
             <details class="ch-more">
               <summary class="hud"><span class="when-closed">Leggi tutto · Read more ↓</span><span class="when-open">Chiudi · Close ↑</span></summary>
               <div class="ch-desc">
+                <p class="first">Nove anni di diari di allenamento di un sollevatore amatoriale, dal 2017 a oggi.</p>
                 <p>Non ho mai seguito un programma alla lettera: leggo un metodo, prendo l’idea e la adatto alla mia settimana, alla mia palestra (o al mio giardino), ai miei infortuni. Cicli russi, Sheiko, l’Accademia Italiana della Forza (AIF), jump set, giorni pesanti e leggeri, allenamenti in lockdown con uno zaino.</p>
                 <p>Ogni short è un programma reale dal mio diario e l’idea che c’è dietro, pronto da salvare con uno screenshot. È un diario, non una prescrizione: niente coaching, niente promesse, solo quello che ho davvero scritto e allenato.</p>
                 <p>Il nome è un omaggio a Power to the People! di Pavel Tsatsouline. Nessuna affiliazione con lui, con i suoi editori o con i metodi citati.</p>
                 <div class="en" lang="en">
+                  <p class="first">Nine years of training logs from one amateur lifter, 2017 to today.</p>
                   <p>I’ve never followed a program as written: I read a method, borrow the idea and adapt it to my week, my gym (or my garden), my injuries. Russian cycles, Sheiko, the Accademia Italiana della Forza (AIF), jump sets, heavy/light days, lockdown workouts with a backpack.</p>
                   <p>Every Short is one real program from my logbook and the idea behind it, ready to screenshot. It’s a diary, not a prescription: no coaching, no promises, just what I actually wrote down and trained.</p>
                   <p>The name is a nod to Pavel Tsatsouline’s Power to the People!. Not affiliated with him, his publishers, or any of the methods mentioned here.</p>
@@ -1139,27 +1145,35 @@
   </script>
 
   <script>
-    /* Monitor typing: the card's lead line is typed on its CRT screen.
+    /* Monitor typing: the card's short description is typed on its CRT screen,
+       Italian first, then (after a 1 s pause) English.
        Desktop (hover): on mouse enter / keyboard focus. Touch: when the screen scrolls into view. */
     (function () {
       var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
       var canHover = window.matchMedia && matchMedia('(hover: hover)').matches;
+      var SPEED = 38, PAUSE = 1000;
       [].forEach.call(document.querySelectorAll('#canali .ch'), function (card) {
-        var out = card.querySelector('.ch-type'), text = card.getAttribute('data-type') || '', timer = 0;
-        if (!out || !text) return;
-        function start() {
-          clearInterval(timer);
-          card.classList.add('typing');
+        var out = card.querySelector('.ch-type');
+        var texts = [card.getAttribute('data-type'), card.getAttribute('data-type-en')].filter(Boolean);
+        var langs = ['it', 'en'], timers = [];
+        if (!out || !texts.length) return;
+        function clear() { timers.forEach(clearTimeout); timers = []; }
+        function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+        function show(idx) {
           var line = document.createElement('span'), node = document.createTextNode('');
-          line.appendChild(node); out.textContent = ''; out.appendChild(line);
-          if (reduce) { node.nodeValue = text; return; }
+          line.appendChild(node); line.lang = langs[idx] || 'it';
+          out.textContent = ''; out.appendChild(line);
+          var text = texts[idx];
+          function next() { if (idx + 1 < texts.length) later(function () { show(idx + 1); }, PAUSE); }
+          if (reduce) { node.nodeValue = text; next(); return; }
           var i = 0;
-          timer = setInterval(function () {
+          (function step() {
             node.nodeValue = text.slice(0, ++i);
-            if (i >= text.length) clearInterval(timer);
-          }, 38);
+            if (i < text.length) later(step, SPEED); else next();
+          })();
         }
-        function stop() { clearInterval(timer); card.classList.remove('typing'); }
+        function start() { clear(); card.classList.add('typing'); show(0); }
+        function stop() { clear(); card.classList.remove('typing'); }
         if (canHover) {
           card.addEventListener('mouseenter', start);
           card.addEventListener('mouseleave', stop);
