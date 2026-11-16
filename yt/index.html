@@ -320,7 +320,10 @@
     .ch-desc p.first { color: var(--ink); }
     .ch-desc .en p.first { color: var(--muted); }
     /* reserve two lines for the channel name so handles and "Leggi tutto" line up across cards */
-    @media (min-width: 601px) { .ch-title { min-height: 4.2rem; align-items: flex-end; } }
+    @media (min-width: 601px) { .ch-title { min-height: 4.2rem; } }
+    /* names start at the same height; the square sits on the first line */
+    .ch-title { align-items: flex-start; }
+    .ch-title .ch-dot { margin-top: calc((2.1rem - 22px) / 2); }
     .ch-desc .en { margin-top: 14px; padding-top: 4px; border-top: 1px dashed var(--line); }
     .ch-desc .en p { color: var(--faint); }
     /* terminal typing on the monitor (hover on desktop, scroll-into-view on touch) */
