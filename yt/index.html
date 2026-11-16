@@ -247,13 +247,21 @@
         radial-gradient(ellipse 100% 100% at 50% 50%, transparent 48%, rgba(0, 0, 0, .72) 100%);
       box-shadow: inset 0 0 36px rgba(0, 0, 0, .85), inset 0 0 0 1px rgba(92, 255, 122, .18);
     }
+    .tube { container-type: inline-size; }
     .ch-mono {
+      display: flex; flex-direction: column; align-items: center; gap: .28em;
+      padding: 0 12%; text-align: center;
       font-family: var(--font-display); font-weight: 400;
-      font-size: clamp(5.5rem, 11vw, 8.5rem); letter-spacing: 0; line-height: 1;
+      font-size: var(--ns, 15cqw); letter-spacing: 0; line-height: .9;
       color: var(--ink-strong);
       transition: transform .35s cubic-bezier(.2,.8,.2,1);
     }
-    .ch-mono em { font-family: var(--font-display); font-style: normal; font-weight: 400; color: var(--app); letter-spacing: 0; }
+    .ch-mono b { font-weight: 400; }
+    .ch-mono small {
+      font-family: var(--font-mono); font-size: max(10px, 4.4cqw); font-weight: 600;
+      letter-spacing: .2em; text-transform: uppercase; line-height: 1;
+      color: var(--app); text-shadow: none;
+    }
     .ch:hover .ch-mono { transform: scale(1.06); }
     .ch-screen .corner { position: absolute; top: 18px; left: 20px; }
     .ch-screen .corner-r { position: absolute; top: 18px; right: 20px; }
@@ -277,6 +285,28 @@
     .ch-cta::after { content: ""; position: absolute; inset: 0; z-index: 1; }
     .ch-cta:focus-visible { outline: none; }
     .ch-cta:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .ch-social {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 14px; border: 1px solid var(--line-strong);
+      background: var(--bg-raised);
+      color: var(--ink); text-decoration: none;
+      transition: background-color .12s, color .12s, border-color .12s;
+    }
+    .ch-social .ig-ico {
+      flex: none; width: 46px; height: 46px;
+      display: grid; place-items: center;
+      border: 1px solid var(--line-strong); background: var(--bg-sunken);
+      color: var(--accent); filter: drop-shadow(0 0 6px rgba(77, 255, 122, .35));
+    }
+    .ch-social .ig-ico svg { width: 28px; height: 28px; }
+    .ch-social .ig-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .ch-social b { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; line-height: 1; color: var(--ink-strong); }
+    .ch-social small { font-family: var(--font-mono); font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; }
+    .ch-social .arrow { margin-left: auto; font-family: var(--font-mono); }
+    .ch-social:hover { background: var(--invert-bg); color: var(--invert-fg); border-color: transparent; }
+    .ch-social:hover b, .ch-social:hover small { color: var(--invert-fg); }
+    .ch-social:hover .ig-ico { background: var(--invert-fg); border-color: transparent; filter: none; }
     .ch-lead { margin: 2px 0 0; color: var(--ink); font-size: .92rem; line-height: 1.55; }
     .ch-lead span { display: block; margin-top: 4px; color: var(--faint); font-size: .85rem; }
     .ch-more { position: relative; z-index: 2; }
@@ -452,7 +482,7 @@
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">01</span>
             <span class="corner-r chip">YouTube</span>
-            <span class="ch-mono" aria-hidden="true">F<em>a</em></span>
+            <span class="ch-mono" aria-hidden="true"><b>Faaaaacts</b><small>▶ YouTube</small></span>
             <p class="ch-type" aria-hidden="true"></p>
           </div></div>
           <div class="ch-body">
@@ -473,7 +503,7 @@
               </div>
             </details>
             <div class="chips"><span class="chip">Shorts</span><span class="chip">Auto-upload</span></div>
-            <a class="ch-cta hud" href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener"><span>Apri canale · Open</span><span class="arrow">↗</span></a>
+            <a class="ch-cta hud" href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener"><span>Apri su YouTube</span><span class="arrow">↗</span></a>
           </div>
         </div>
 
@@ -481,7 +511,7 @@
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">02</span>
             <span class="corner-r chip">YouTube</span>
-            <span class="ch-mono" aria-hidden="true">T<em>a</em></span>
+            <span class="ch-mono" aria-hidden="true"><b>TakeAway</b><small>▶ YouTube</small></span>
             <p class="ch-type" aria-hidden="true"></p>
           </div></div>
           <div class="ch-body">
@@ -502,7 +532,8 @@
               </div>
             </details>
             <div class="chips"><span class="chip">Shorts</span><span class="chip">Auto-upload</span></div>
-            <a class="ch-cta hud" href="https://www.youtube.com/@TakeAway-n5y" target="_blank" rel="noopener"><span>Apri canale · Open</span><span class="arrow">↗</span></a>
+            <a class="ch-social" data-platform="Instagram" data-handle="@takeaway3377" href="https://www.instagram.com/takeaway3377" target="_blank" rel="noopener"><span class="ig-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg></span><span class="ig-txt"><b>Instagram</b><small>@takeaway3377</small></span><span class="arrow">↗</span></a>
+            <a class="ch-cta hud" href="https://www.youtube.com/@TakeAway-n5y" target="_blank" rel="noopener"><span>Apri su YouTube</span><span class="arrow">↗</span></a>
           </div>
         </div>
 
@@ -510,7 +541,7 @@
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">03</span>
             <span class="corner-r chip">YouTube</span>
-            <span class="ch-mono" aria-hidden="true">T<em>b</em></span>
+            <span class="ch-mono" aria-hidden="true"><b>TrueBeers</b><small>▶ YouTube</small></span>
             <p class="ch-type" aria-hidden="true"></p>
           </div></div>
           <div class="ch-body">
@@ -531,7 +562,7 @@
               </div>
             </details>
             <div class="chips"><span class="chip">Shorts</span><span class="chip">Auto-upload</span></div>
-            <a class="ch-cta hud" href="https://www.youtube.com/@TrueBeers/shorts" target="_blank" rel="noopener"><span>Apri canale · Open</span><span class="arrow">↗</span></a>
+            <a class="ch-cta hud" href="https://www.youtube.com/@TrueBeers/shorts" target="_blank" rel="noopener"><span>Apri su YouTube</span><span class="arrow">↗</span></a>
           </div>
         </div>
 
@@ -539,7 +570,7 @@
           <div class="ch-screen"><div class="tube">
             <span class="corner chip">04</span>
             <span class="corner-r chip">YouTube</span>
-            <span class="ch-mono" aria-hidden="true">P<em>p</em></span>
+            <span class="ch-mono" aria-hidden="true" style="--ns:10.5cqw"><b>Powerbuilding to the People</b><small>▶ YouTube</small></span>
             <p class="ch-type" aria-hidden="true"></p>
           </div></div>
           <div class="ch-body">
@@ -560,7 +591,7 @@
               </div>
             </details>
             <div class="chips"><span class="chip">Shorts</span><span class="chip">Auto-upload</span></div>
-            <a class="ch-cta hud" href="https://www.youtube.com/@powerbuildingtothepeople1996" target="_blank" rel="noopener"><span>Apri canale · Open</span><span class="arrow">↗</span></a>
+            <a class="ch-cta hud" href="https://www.youtube.com/@powerbuildingtothepeople1996" target="_blank" rel="noopener"><span>Apri su YouTube</span><span class="arrow">↗</span></a>
           </div>
         </div>
       </div>
@@ -734,6 +765,7 @@
         <ul>
           <li><a href="https://www.youtube.com/@faaaaacts" target="_blank" rel="noopener">@faaaaacts</a></li>
           <li><a href="https://www.youtube.com/@TakeAway-n5y" target="_blank" rel="noopener">@TakeAway-n5y</a></li>
+          <li><a href="https://www.instagram.com/takeaway3377" target="_blank" rel="noopener">@takeaway3377 · Instagram</a></li>
           <li><a href="https://www.youtube.com/@TrueBeers/shorts" target="_blank" rel="noopener">@TrueBeers</a></li>
           <li><a href="https://www.youtube.com/@powerbuildingtothepeople1996" target="_blank" rel="noopener">@powerbuildingtothepeople1996</a></li>
         </ul>
@@ -767,15 +799,21 @@
       var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       var channels = [].map.call(document.querySelectorAll('#canali .ch'), function (a) {
-        var h3 = a.querySelector('h3'), mono = a.querySelector('.ch-mono'), handle = a.querySelector('.handle');
-        var link = a.matches('a') ? a : a.querySelector('a[href]');
+        var h3 = a.querySelector('h3'), handle = a.querySelector('.handle');
+        var link = a.matches('a') ? a : (a.querySelector('a.ch-cta') || a.querySelector('a[href]'));
         var name = h3 ? h3.textContent.trim() : (link ? link.href : '');
+        var color = (a.style.getPropertyValue('--app') || '').trim() || '#7a4fd0';
         return {
           name: name,
           handle: handle ? handle.textContent.trim() : '',
           url: link ? link.href : '',
-          color: (a.style.getPropertyValue('--app') || '').trim() || '#7a4fd0',
-          mono: mono ? mono.textContent.trim() : name.slice(0, 2)
+          color: color,
+          platform: 'YouTube',
+          // extra profiles (e.g. Instagram) declared as a.ch-social[data-platform] in the card
+          extras: [].map.call(a.querySelectorAll('a.ch-social[data-platform]'), function (x) {
+            return { name: name, handle: x.getAttribute('data-handle') || '', url: x.href, color: color,
+                     platform: x.getAttribute('data-platform') };
+          })
         };
       });
       if (!channels.length) return;
@@ -791,12 +829,12 @@
       var cards = [], k = 0;
       for (var arm = 0; arm < ARMS; arm++) {
         for (var i = 0; i < perArm; i++) {
-          cards.push({
-            arm: arm,
-            p0: (i / perArm + arm / (ARMS * perArm)) % 1,
-            ch: channels[k++ % channels.length],
-            wob: Math.random() * Math.PI * 2,
-            x: 0, y: 0, s: 0, a: 0
+          var ch = channels[k++ % channels.length];
+          var p0 = (i / perArm + arm / (ARMS * perArm)) % 1;
+          cards.push({ arm: arm, p0: p0, ch: ch, wob: Math.random() * Math.PI * 2, x: 0, y: 0, s: 0, a: 0 });
+          // companion cards (other platforms) travel right behind the channel card
+          ch.extras.forEach(function (ex, j) {
+            cards.push({ arm: arm, p0: (p0 - 0.045 * (j + 1) + 1) % 1, ch: ex, wob: Math.random() * Math.PI * 2, x: 0, y: 0, s: 0, a: 0 });
           });
         }
       }
@@ -910,6 +948,28 @@
         return -1;
       }
 
+      function roundRect(x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+      }
+
+      // greedy word-wrap of a name inside maxW × maxH, shrinking the font until it fits
+      function fitName(text, maxW, maxH, size) {
+        var words = text.split(/\s+/), list;
+        for (; size >= 7; size *= 0.9) {
+          ctx.font = size + 'px VT323, monospace';
+          list = []; var line = '', ok = true;
+          for (var i = 0; i < words.length; i++) {
+            if (ctx.measureText(words[i]).width > maxW) { ok = false; break; }
+            var t = line ? line + ' ' + words[i] : words[i];
+            if (ctx.measureText(t).width <= maxW) line = t; else { list.push(line); line = words[i]; }
+          }
+          if (ok) { list.push(line); if (list.length * size * 0.95 <= maxH) break; }
+        }
+        return { size: Math.round(size), list: list || [text] };
+      }
+
       function drawCard(c, isHover) {
         var s = c.s * (isHover ? 1.08 : 1), x = c.x - s / 2, y = c.y - s / 2;
         ctx.globalAlpha = c.a;
@@ -918,18 +978,34 @@
         // colour bar
         ctx.fillStyle = c.ch.color;
         ctx.fillRect(x, y + s * 0.86, s, s * 0.14);
-        // corner square
-        ctx.fillRect(x + s * 0.08, y + s * 0.08, s * 0.1, s * 0.1);
+        // platform mark: square for YouTube, camera glyph for Instagram
+        if (c.ch.platform === 'Instagram') {
+          var g = s * 0.14, gx = x + s * 0.08, gy = y + s * 0.08;
+          ctx.strokeStyle = c.ch.color; ctx.lineWidth = Math.max(1, s * 0.018);
+          roundRect(gx, gy, g, g, g * 0.3); ctx.stroke();
+          ctx.beginPath(); ctx.arc(gx + g / 2, gy + g / 2, g * 0.22, 0, Math.PI * 2); ctx.stroke();
+        } else {
+          ctx.fillRect(x + s * 0.08, y + s * 0.08, s * 0.1, s * 0.1);
+        }
+        // platform label
+        if (s > 46) {
+          ctx.fillStyle = c.ch.color;
+          ctx.font = '600 ' + Math.max(6, Math.round(s * 0.075)) + 'px "IBM Plex Mono", ui-monospace, monospace';
+          ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+          ctx.fillText(c.ch.platform.toUpperCase(), x + s * 0.92, y + s * 0.085);
+        }
         // border
         ctx.lineWidth = isHover ? 2 : 1;
         ctx.strokeStyle = isHover ? col['--accent'] : col['--line-strong'];
         ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
-        // monogram
-        if (s > 26) {
+        // channel name, wrapped to fit the card
+        if (s > 34) {
+          var lines = fitName(c.ch.name, s * 0.84, s * 0.5, s * 0.24);
           ctx.fillStyle = col['--ink-strong'];
           ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.font = Math.round(s * 0.52) + 'px VT323, monospace';
-          ctx.fillText(c.ch.mono, c.x, c.y - s * 0.04);
+          ctx.font = lines.size + 'px VT323, monospace';
+          var lh = lines.size * 0.95, y0 = c.y + s * 0.03 - (lines.list.length - 1) * lh / 2;
+          for (var li = 0; li < lines.list.length; li++) ctx.fillText(lines.list[li], c.x, y0 + li * lh);
         }
         // handle label under large cards
         if (s > 70) {
@@ -952,7 +1028,7 @@
         for (var i = 0; i < cards.length; i++) drawCard(cards[i], i === hover);
         if (hover >= 0) {
           var c = cards[hover];
-          tip.textContent = c.ch.name + ' ↗';
+          tip.textContent = c.ch.name + ' · ' + c.ch.platform + ' ↗';
           tip.style.transform = 'translate(' + Math.round(mouse.x + 14) + 'px,' + Math.round(mouse.y + 14) + 'px)';
           tip.style.opacity = 1;
           canvas.style.cursor = 'pointer';
