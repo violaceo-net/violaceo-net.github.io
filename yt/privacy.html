@@ -125,15 +125,17 @@
       <div class="doc-head">
         <span class="hud">violaceo-net / Shorts / Privacy</span>
         <h1>Privacy <span class="serif">Policy</span></h1>
-        <p class="updated">Ultimo aggiornamento: 14 novembre 2026</p>
+        <p class="updated">Ultimo aggiornamento: 16 novembre 2026</p>
       </div>
 
       <p>
         Questa informativa descrive come l'applicazione <strong>Shorts</strong>
-        (di seguito "l'app") accede, usa, conserva e protegge i dati del tuo account
-        Google/YouTube. L'app è uno strumento personale, eseguito solo sul PC del suo
+        (di seguito "l'app") accede, usa, conserva e protegge i dati dei tuoi account
+        Google/YouTube e Instagram. L'app è uno strumento personale, eseguito solo sul PC del suo
         sviluppatore, che usa le YouTube Data API v3 per caricare gli short sui canali
-        YouTube del proprietario.
+        YouTube del proprietario e le API ufficiali di Instagram (Meta) per pubblicarli come Reel
+        sui suoi account Instagram. Le sezioni da 1 a 7 riguardano Google e YouTube, la
+        <a href="#instagram">sezione 8</a> Instagram e Meta.
       </p>
 
       <h2>1. Permesso richiesto e dati trattati</h2>
@@ -162,14 +164,17 @@
       <h2>3. Conservazione dei dati</h2>
       <ul>
         <li>I token OAuth (di accesso e di aggiornamento) sono salvati <strong>solo in locale, sul PC su cui gira l'app</strong>.</li>
-        <li>Non esiste alcun server dell'app: nessun dato viene inviato a server propri o di terzi, ad eccezione delle chiamate dirette alle API di YouTube necessarie per il caricamento.</li>
+        <li>Non esiste alcun server dell'app: nessun dato di Google viene inviato a server propri o di terzi, ad eccezione delle chiamate dirette alle API di YouTube necessarie per il caricamento.</li>
         <li>Cancellando i file locali dei token, questi vengono eliminati definitivamente.</li>
       </ul>
 
       <h2>4. Condivisione con terzi</h2>
       <p>
         I dati <strong>non vengono venduti, né ceduti, né condivisi con terzi</strong> per nessuno scopo.
-        L'unico destinatario dei dati è YouTube, tramite le API ufficiali, per eseguire il caricamento richiesto.
+        L'unico destinatario dei dati descritti in queste sezioni è YouTube, tramite le API ufficiali,
+        per eseguire il caricamento richiesto. Lo stesso short, quando viene pubblicato anche su
+        Instagram, parte dal PC del proprietario verso Meta come descritto nella sezione 8: nessun
+        dato ricevuto dalle API di Google viene passato a Meta.
       </p>
 
       <h2>5. Google API Services User Data Policy e Limited Use</h2>
@@ -203,12 +208,64 @@
         più caricare video; i token salvati in locale smettono di funzionare e possono essere cancellati.
       </p>
 
-      <h2>8. Modifiche a questa informativa</h2>
+      <h2 id="instagram">8. Instagram (Meta)</h2>
+      <p>
+        Per gli account Instagram del proprietario l'app usa le API ufficiali della piattaforma
+        Instagram di Meta, con un token di accesso concesso dal proprietario tramite il suo portfolio
+        business di Meta. Permessi usati: <code>instagram_content_publish</code>, per pubblicare i Reel,
+        e <code>instagram_basic</code>, per leggere le informazioni di base dell'account.
+      </p>
+      <p>Dati trattati:</p>
+      <ul>
+        <li>il <strong>file video</strong> dello short, già pubblico su YouTube;</li>
+        <li>la <strong>didascalia</strong>: titolo, descrizione e hashtag dello short;</li>
+        <li>un'<strong>immagine di copertina</strong> facoltativa, presa dallo short stesso;</li>
+        <li>dalle API, solo: nome utente e numero di post dell'account, limite giornaliero di pubblicazione, stato di elaborazione e link del Reel pubblicato.</li>
+      </ul>
+      <p>
+        L'app <strong>non legge né invia</strong> messaggi diretti, <strong>non legge</strong> commenti,
+        menzioni, statistiche o follower, non usa le inserzioni e <strong>non modifica né cancella</strong>
+        post già pubblicati. Per sapere se uno short è pubblico su YouTube usa la pagina pubblica oEmbed
+        di YouTube, senza account e senza token.
+      </p>
+      <p>
+        <strong>Passaggio del video.</strong> Meta prende il video da un indirizzo web: per questo video e
+        copertina vengono caricati per pochi minuti in un archivio privato di Google Cloud Storage del
+        proprietario, raggiungibile solo con un link firmato valido un'ora. Appena Meta ha finito, l'app li
+        cancella; una regola dell'archivio cancella comunque tutto dopo un giorno.
+      </p>
+      <p>
+        <strong>Conservazione.</strong> Il token di Meta è salvato solo in locale, sul PC su cui gira l'app.
+        L'app tiene in locale anche un registro dei Reel pubblicati (identificativo, link e data), per non
+        pubblicare due volte lo stesso short.
+      </p>
+      <p>
+        <strong>Uso e condivisione.</strong> I dati sono usati solo per pubblicare i Reel sugli account del
+        proprietario; non sono venduti, ceduti o usati per pubblicità, profilazione o addestramento di
+        modelli di intelligenza artificiale. I soli destinatari sono Meta, per la pubblicazione, e Google
+        Cloud Storage, per il passaggio del video. Il trattamento da parte di Meta è regolato dalle
+        <a href="https://help.instagram.com/581066165581870">Condizioni d'uso di Instagram</a> e
+        dall'<a href="https://privacycenter.instagram.com/policy">Informativa sulla privacy di Instagram</a>.
+      </p>
+      <p>
+        <strong>Revoca.</strong> Puoi revocare l'accesso da Instagram → Impostazioni → App e siti web
+        (<a href="https://www.instagram.com/accounts/manage_access/">instagram.com/accounts/manage_access</a>)
+        oppure dalle impostazioni del portfolio business di Meta
+        (<a href="https://business.facebook.com/settings">business.facebook.com/settings</a>), togliendo
+        l'account Instagram dall'app. Dopo la revoca il token salvato smette di funzionare e può essere cancellato.
+      </p>
+      <p id="cancellazione">
+        <strong>Cancellazione dei dati.</strong> Per far cancellare i dati che l'app conserva sul PC (token e
+        registro dei Reel pubblicati) scrivi all'indirizzo della sezione 10: vengono cancellati entro 30 giorni.
+        I Reel già pubblicati restano sull'account e si cancellano da Instagram.
+      </p>
+
+      <h2>9. Modifiche a questa informativa</h2>
       <p>
         Eventuali modifiche saranno pubblicate su questa pagina, con l'aggiornamento della data in alto.
       </p>
 
-      <h2>9. Contatti</h2>
+      <h2>10. Contatti</h2>
       <p>
         Per domande su questa informativa o sui tuoi dati:
         <a href="mailto:givazzo@gmail.com">givazzo@gmail.com</a>
@@ -222,14 +279,17 @@
       <div class="doc-head">
         <span class="hud">violaceo-net / Shorts / Privacy</span>
         <h1>Privacy <span class="serif">Policy</span></h1>
-        <p class="updated">Last updated: November 14, 2026</p>
+        <p class="updated">Last updated: November 16, 2026</p>
       </div>
 
       <p>
         This policy describes how the <strong>Shorts</strong> application ("the app")
-        accesses, uses, stores and protects data from your Google/YouTube account.
+        accesses, uses, stores and protects data from your Google/YouTube and Instagram accounts.
         The app is a personal tool, running only on its developer's PC, that uses the
-        YouTube Data API v3 to upload Shorts to the owner's YouTube channels.
+        YouTube Data API v3 to upload Shorts to the owner's YouTube channels and the official
+        Instagram (Meta) APIs to publish them as Reels on the owner's Instagram accounts.
+        Sections 1 to 7 cover Google and YouTube; <a href="#instagram-en">section 8</a> covers
+        Instagram and Meta.
       </p>
 
       <h2>1. Permission requested and data processed</h2>
@@ -259,15 +319,17 @@
       <h2>3. Data storage</h2>
       <ul>
         <li>OAuth tokens (access and refresh) are stored <strong>only locally, on the PC where the app runs</strong>.</li>
-        <li>The app has no server: no data is sent to the developer's or any third-party servers, except for the direct calls to the YouTube APIs required for uploading.</li>
+        <li>The app has no server: no Google data is sent to the developer's or any third-party servers, except for the direct calls to the YouTube APIs required for uploading.</li>
         <li>Deleting the local token files permanently removes them.</li>
       </ul>
 
       <h2>4. Sharing with third parties</h2>
       <p>
         Data is <strong>not sold, transferred or shared with third parties</strong> for any purpose.
-        The only recipient of the data is YouTube, through the official APIs, to perform the
-        requested upload.
+        The only recipient of the data described in these sections is YouTube, through the official
+        APIs, to perform the requested upload. When the same Short is also published on Instagram, it
+        goes from the owner's PC to Meta as described in section 8: no data received from Google APIs
+        is passed to Meta.
       </p>
 
       <h2>5. Google API Services User Data Policy and Limited Use</h2>
@@ -301,12 +363,64 @@
         no longer upload videos; locally stored tokens stop working and can be deleted.
       </p>
 
-      <h2>8. Changes to this policy</h2>
+      <h2 id="instagram-en">8. Instagram (Meta)</h2>
+      <p>
+        For the owner's Instagram accounts the app uses the official APIs of Meta's Instagram
+        platform, with an access token granted by the owner through their Meta business portfolio.
+        Permissions used: <code>instagram_content_publish</code>, to publish Reels, and
+        <code>instagram_basic</code>, to read basic account information.
+      </p>
+      <p>Data processed:</p>
+      <ul>
+        <li>the Short's <strong>video file</strong>, already public on YouTube;</li>
+        <li>the <strong>caption</strong>: the Short's title, description and hashtags;</li>
+        <li>an optional <strong>cover image</strong>, taken from the Short itself;</li>
+        <li>from the APIs, only: the account's username and post count, the daily publishing limit, the processing status and the link of the published Reel.</li>
+      </ul>
+      <p>
+        The app <strong>does not read or send</strong> direct messages, <strong>does not read</strong>
+        comments, mentions, insights or followers, does not use ads and <strong>does not edit or delete</strong>
+        published posts. To check whether a Short is public on YouTube it uses YouTube's public oEmbed
+        endpoint, with no account and no token.
+      </p>
+      <p>
+        <strong>Video transit.</strong> Meta fetches the video from a web address: for this reason the video
+        and cover are uploaded for a few minutes to a private Google Cloud Storage bucket owned by the
+        owner, reachable only through a signed link valid for one hour. As soon as Meta is done, the app
+        deletes them; a bucket rule deletes everything after one day in any case.
+      </p>
+      <p>
+        <strong>Storage.</strong> The Meta token is stored only locally, on the PC where the app runs. The
+        app also keeps a local record of published Reels (ID, link and date), so the same Short is never
+        published twice.
+      </p>
+      <p>
+        <strong>Use and sharing.</strong> Data is used only to publish Reels to the owner's accounts; it is
+        not sold, transferred or used for advertising, profiling or training artificial intelligence
+        models. The only recipients are Meta, for publishing, and Google Cloud Storage, for the video
+        transit. Meta's handling of data is governed by the
+        <a href="https://help.instagram.com/581066165581870">Instagram Terms of Use</a> and the
+        <a href="https://privacycenter.instagram.com/policy">Instagram Privacy Policy</a>.
+      </p>
+      <p>
+        <strong>Revoking access.</strong> You can revoke access from Instagram → Settings → Apps and
+        websites (<a href="https://www.instagram.com/accounts/manage_access/">instagram.com/accounts/manage_access</a>)
+        or from your Meta business portfolio settings
+        (<a href="https://business.facebook.com/settings">business.facebook.com/settings</a>) by removing the
+        Instagram account from the app. After revocation the stored token stops working and can be deleted.
+      </p>
+      <p id="data-deletion">
+        <strong>Data deletion.</strong> To have the data the app keeps on the PC (token and record of
+        published Reels) deleted, write to the address in section 10: it will be deleted within 30 days.
+        Reels already published stay on the account and are deleted from Instagram.
+      </p>
+
+      <h2>9. Changes to this policy</h2>
       <p>
         Any changes will be published on this page, and the date at the top will be updated.
       </p>
 
-      <h2>9. Contact</h2>
+      <h2>10. Contact</h2>
       <p>
         For questions about this policy or your data:
         <a href="mailto:givazzo@gmail.com">givazzo@gmail.com</a>

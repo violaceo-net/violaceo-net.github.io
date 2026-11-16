@@ -654,8 +654,8 @@
         <div class="rule">
           <span class="n hud">04</span>
           <h3>Pubblica</h3>
-          <p>Caricamento automatico sul canale giusto, senza passaggi manuali.</p>
-          <p class="en" lang="en">Publish: automatic upload to the right channel, no manual steps.</p>
+          <p>Caricamento automatico sul canale giusto e su Instagram, senza passaggi manuali.</p>
+          <p class="en" lang="en">Publish: automatic upload to the right channel and to Instagram, no manual steps.</p>
         </div>
         <div class="rule">
           <span class="n hud">05</span>
@@ -671,17 +671,19 @@
       <div class="wrap sec-head">
         <div>
           <span class="sec-num hud"><b>03</b>/Permessi · Permissions</span>
-          <h2 class="display">Un <span class="serif">solo</span> permesso.</h2>
-          <p class="h2-en" lang="en">A single permission.</p>
+          <h2 class="display">Solo <span class="serif">pubblicare</span>.</h2>
+          <p class="h2-en" lang="en">Publishing only.</p>
         </div>
         <div>
           <p>
-            Per pubblicare, Shorts chiede a Google un solo permesso: caricare video.
+            Per pubblicare su YouTube, Shorts chiede a Google un solo permesso: caricare video.
             Nient'altro: nessuna statistica, nessun commento, nessuna modifica ai video esistenti.
+            Su Instagram usa le API ufficiali di Meta solo per pubblicare i Reel sui miei account.
           </p>
           <p lang="en">
-            To publish, Shorts asks Google for a single permission: uploading videos.
+            To publish on YouTube, Shorts asks Google for a single permission: uploading videos.
             Nothing else: no statistics, no comments, no changes to existing videos.
+            On Instagram it uses Meta's official APIs only to publish Reels to my accounts.
           </p>
         </div>
       </div>
@@ -740,6 +742,38 @@
           </div>
         </div>
 
+        <p class="wrap tech-label hud">Instagram · Meta</p>
+        <div class="scope">
+          <div>
+            <span class="hud" style="color:var(--faint)">Permessi usati · Permissions used</span>
+            <code>instagram_content_publish</code>
+            <code>instagram_basic</code>
+            <p>
+              Pubblica come Reel, sui miei account Instagram, gli short già pubblici su YouTube, con la stessa
+              descrizione. Legge solo nome utente, numero di post e limite di pubblicazione, per controllare che
+              l'account sia quello giusto. L'app Meta è in modalità sviluppo e la usano solo i miei account.
+              Il video passa per pochi minuti da uno spazio privato di Google Cloud Storage del mio progetto,
+              con un link temporaneo da cui Meta lo scarica; subito dopo viene cancellato.
+            </p>
+            <p class="en" lang="en">
+              Publishes the Shorts already public on YouTube as Reels on my Instagram accounts, with the same
+              description. It only reads the username, post count and publishing limit, to check it is the right
+              account. The Meta app is in development mode and only my accounts use it. The video sits for a few
+              minutes in a private Google Cloud Storage bucket of my project, behind a temporary link Meta
+              downloads it from; it is deleted right after.
+            </p>
+          </div>
+          <div>
+            <span class="hud" style="color:var(--faint)">Non usati · Not used</span>
+            <ul>
+              <li><span class="x">✕</span><span>Messaggi diretti<small lang="en">Direct messages</small></span></li>
+              <li><span class="x">✕</span><span>Commenti e menzioni<small lang="en">Comments and mentions</small></span></li>
+              <li><span class="x">✕</span><span>Inserzioni e statistiche<small lang="en">Ads and insights</small></span></li>
+              <li><span class="x">✕</span><span>Modifica o cancellazione di post<small lang="en">Editing or deleting posts</small></span></li>
+            </ul>
+          </div>
+        </div>
+
         <p class="wrap tech-label hud">Dati e privacy · Data &amp; privacy</p>
         <div class="scope">
           <div>
@@ -757,6 +791,7 @@
             <ul style="margin-top:0">
               <li><span class="x">→</span><span><a href="privacy.html">Privacy Policy</a><small lang="en">Full privacy policy</small></span></li>
               <li><span class="x">→</span><span><a href="https://myaccount.google.com/permissions">Revoca accesso</a><small lang="en">Revoke access (Google Account)</small></span></li>
+              <li><span class="x">→</span><span><a href="https://www.instagram.com/accounts/manage_access/">Revoca accesso Instagram</a><small lang="en">Revoke access (Instagram: apps and websites)</small></span></li>
             </ul>
           </div>
         </div>
@@ -769,8 +804,8 @@
     <div class="foot">
       <div>
         <a class="logo" href="../" style="padding:0;border:0"><i class="logo-mark" aria-hidden="true"></i>Shorts</a>
-        <p class="tag">Pipeline di creazione e pubblicazione per canali YouTube. Non affiliato a YouTube o Google.</p>
-        <p class="tag" lang="en" style="color:var(--faint);margin-top:6px">Creation and publishing pipeline for YouTube channels. Not affiliated with YouTube or Google.</p>
+        <p class="tag">Pipeline di creazione e pubblicazione per canali YouTube. Non affiliato a YouTube, Google, Instagram o Meta.</p>
+        <p class="tag" lang="en" style="color:var(--faint);margin-top:6px">Creation and publishing pipeline for YouTube channels. Not affiliated with YouTube, Google, Instagram or Meta.</p>
       </div>
       <div>
         <h4 class="hud">Canali · Channels</h4>
