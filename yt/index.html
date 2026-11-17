@@ -1037,14 +1037,20 @@
         // colour bar
         ctx.fillStyle = c.ch.color;
         ctx.fillRect(x, y + s * 0.86, s, s * 0.14);
-        // platform mark: square for YouTube, camera glyph for Instagram
+        // platform mark: play glyph for YouTube, camera glyph for Instagram
+        var g = s * 0.14, gx = x + s * 0.08, gy = y + s * 0.08;
+        ctx.strokeStyle = c.ch.color; ctx.lineWidth = Math.max(1, s * 0.018);
         if (c.ch.platform === 'Instagram') {
-          var g = s * 0.14, gx = x + s * 0.08, gy = y + s * 0.08;
-          ctx.strokeStyle = c.ch.color; ctx.lineWidth = Math.max(1, s * 0.018);
           roundRect(gx, gy, g, g, g * 0.3); ctx.stroke();
           ctx.beginPath(); ctx.arc(gx + g / 2, gy + g / 2, g * 0.22, 0, Math.PI * 2); ctx.stroke();
         } else {
-          ctx.fillRect(x + s * 0.08, y + s * 0.08, s * 0.1, s * 0.1);
+          var gw = g * 1.25, gh = g * 0.9;                     // rounded "screen" with a play triangle
+          roundRect(gx, gy + (g - gh) / 2, gw, gh, gh * 0.28); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(gx + gw * 0.40, gy + g / 2 - gh * 0.22);
+          ctx.lineTo(gx + gw * 0.40, gy + g / 2 + gh * 0.22);
+          ctx.lineTo(gx + gw * 0.66, gy + g / 2);
+          ctx.closePath(); ctx.fill();
         }
         // platform label
         if (s > 46) {
