@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pieve FPS – violaceo-net</title>
+  <meta name="description" content="Pieve di Cento ricostruita in 3D dai dati geografici aperti e percorribile in prima persona. Pieve di Cento rebuilt in 3D from open geodata, explorable in first person.">
+  <link rel="canonical" href="https://violaceo-net.github.io/pievefps/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a110c; --bg-raised: #0d1610; --bg-sunken: #060b07;
+      --ink: #b6f2c2; --ink-strong: #d6ffde; --muted: #8fdc9fa6; --faint: #8fdc9f66;
+      --line: #5cff7a1c; --line-strong: #5cff7a4d; --accent: #4dff7a;
+      --invert-bg: #4dff7a; --invert-fg: #061008; --scanline: #5cff7a0a;
+      --glow: 0 0 6px rgba(77, 255, 122, .35), 0 0 18px rgba(77, 255, 122, .12);
+      --font-display: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+      --font-body: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color-scheme: dark;
+    }
+    ::selection { background: var(--accent); color: var(--invert-fg); }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased; font-synthesis: none;
+    }
+    a { color: inherit; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    @media (min-width: 768px) { .wrap { padding: 0 40px; } }
+
+    /* --- primitives ------------------------------------------------ */
+    .hud { font-family: var(--font-mono); font-size: .6875rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; }
+    .display { font-family: var(--font-display); font-weight: 400; color: var(--ink-strong); letter-spacing: 0; line-height: .92; margin: 0; }
+    .hl { color: var(--accent); }
+    .cursor { display: inline-block; width: .42em; height: .62em; margin-left: .12em; vertical-align: baseline; background: var(--accent); animation: blink 1.1s steps(1) infinite; box-shadow: 0 0 10px rgba(77, 255, 122, .6); }
+    @keyframes blink { 50% { opacity: 0; } }
+    .chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      border: 1px solid var(--line); background: var(--bg-sunken); padding: 1px 6px;
+      font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 48px; padding: 0 24px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      text-decoration: none; white-space: nowrap; border: 1px solid transparent;
+      transition: opacity .15s, background-color .12s linear, color .12s linear, border-color .12s;
+    }
+    .btn-primary { background: var(--invert-bg); color: var(--invert-fg); box-shadow: 0 0 14px rgba(77, 255, 122, .25); }
+    .btn-primary:hover { opacity: .8; }
+    .btn-ghost { background: var(--bg); color: var(--ink); border-color: var(--line-strong); }
+    .btn-ghost:hover { background: var(--invert-bg); color: var(--invert-fg); border-color: transparent; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* --- nav ------------------------------------------------------- */
+    .nav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(4px); border-bottom: 1px solid var(--line); }
+    .nav-row { display: flex; align-items: stretch; justify-content: space-between; min-height: 48px; }
+    .nav-left, .nav-right { display: flex; align-items: stretch; }
+    .logo {
+      display: flex; align-items: center; gap: 10px; padding: 0 20px; border-right: 1px solid var(--line);
+      text-decoration: none; font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--ink-strong);
+      text-shadow: var(--glow);
+    }
+    .logo:hover { opacity: .7; }
+    .logo-mark { width: 18px; height: 18px; background: var(--accent); display: inline-block; }
+    .nav-links { display: none; align-items: stretch; }
+    @media (min-width: 980px) { .nav-links { display: flex; } }
+    .nav-links a { display: flex; align-items: center; padding: 0 10px; color: var(--muted); text-decoration: none; }
+    .nav-links a span { padding: 2px 6px; transition: background-color .12s, color .12s; }
+    .nav-links a:hover span { background: var(--invert-bg); color: var(--invert-fg); }
+    .nav .btn { height: auto; border-left: 1px solid var(--line); padding: 0 20px; }
+
+    /* --- hero: first-person grid floor rolling toward the horizon -- */
+    .hero { position: relative; border-bottom: 1px solid var(--line); overflow: hidden; }
+    .floor {
+      position: absolute; left: -50%; right: -50%; bottom: -2%; height: 62%;
+      background-image:
+        linear-gradient(var(--line-strong) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-strong) 1px, transparent 1px);
+      background-size: 64px 64px;
+      transform: perspective(420px) rotateX(68deg); transform-origin: 50% 100%;
+      -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%);
+              mask-image: linear-gradient(to top, #000 10%, transparent 85%);
+      animation: walk 2.6s linear infinite;
+      opacity: .55; pointer-events: none;
+    }
+    @keyframes walk { to { background-position: 0 64px, 0 0; } }
+    .hero-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 88px 0 72px; }
+    .eyebrow { color: var(--muted); display: inline-flex; gap: 10px; align-items: center; }
+    .eyebrow i { width: 6px; height: 6px; background: var(--accent); display: inline-block; }
+    .hero h1 { margin-top: 26px; font-size: clamp(3rem, 9vw, 6.6rem); line-height: .9; max-width: 16ch; text-shadow: var(--glow); }
+    .h1-en { margin: 14px 0 0; font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.1rem); color: var(--muted); text-shadow: var(--glow); }
+    .lede { margin: 26px auto 0; max-width: 40rem; color: var(--muted); font-size: 1.02rem; }
+    .lede span { display: block; margin-top: 8px; font-size: .93rem; color: var(--faint); }
+    .hero-ctas { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .hero-meta { margin-top: 24px; color: var(--faint); display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .hero-monitor { width: min(100%, 980px); margin-top: 56px; }
+
+    /* --- CRT monitors (same tube as the yt page) ------------------- */
+    .monitor { display: flex; flex-direction: column; }
+    .screen {
+      position: relative; aspect-ratio: 4 / 3;
+      margin: 12px; border-radius: 30px / 26px; overflow: hidden;
+      background: #010301;
+      box-shadow: 0 0 0 7px var(--bg-sunken), 0 0 0 8px var(--line);
+    }
+    .hero-monitor .screen { aspect-ratio: 16 / 9; border-radius: 40px / 34px; margin: 10px; }
+    .tube {
+      position: absolute; inset: 0; container-type: inline-size;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        repeating-linear-gradient(0deg, var(--scanline) 0 1px, transparent 1px 3px),
+        radial-gradient(120% 90% at 50% 110%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%),
+        var(--bg-sunken);
+    }
+    .tube::before {
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 28%; z-index: 3; pointer-events: none;
+      background: linear-gradient(180deg, transparent 0, rgba(140, 255, 170, .05) 40%, rgba(170, 255, 195, .16) 50%, rgba(140, 255, 170, .05) 60%, transparent 100%);
+      mix-blend-mode: screen; transform: translateY(-110%);
+      animation: crt-roll 7s linear infinite;
+    }
+    .monitor:nth-child(4n+2) .tube::before { animation-duration: 8.5s; animation-delay: -2.4s; }
+    .monitor:nth-child(4n+3) .tube::before { animation-duration: 6.2s; animation-delay: -4.1s; }
+    .monitor:nth-child(4n+4) .tube::before { animation-duration: 9.3s; animation-delay: -6.6s; }
+    @keyframes crt-roll { 0% { transform: translateY(-110%); } 70%, 100% { transform: translateY(380%); } }
+    .screen::after {
+      content: ""; position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 26% at 34% 12%, rgba(220, 255, 230, .13), transparent 70%),
+        radial-gradient(ellipse 55% 50% at 50% 46%, rgba(140, 255, 170, .07), transparent 72%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, transparent 48%, rgba(0, 0, 0, .72) 100%);
+      box-shadow: inset 0 0 36px rgba(0, 0, 0, .85), inset 0 0 0 1px rgba(92, 255, 122, .18);
+    }
+    .screen .corner { position: absolute; z-index: 2; top: 18px; left: 20px; }
+    .screen .corner-r { position: absolute; z-index: 2; top: 18px; right: 20px; }
+    .hero-monitor .screen .corner { top: 26px; left: 34px; }
+    .hero-monitor .screen .corner-r { top: 26px; right: 34px; }
+    /* placeholder until the Unreal screenshots arrive */
+    .signal { position: relative; z-index: 1; text-align: center; padding: 0 10%; }
+    .signal b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 11cqw; line-height: .9; color: var(--ink-strong); text-shadow: var(--glow); }
+    .signal small { display: block; margin-top: .9em; font-family: var(--font-mono); font-size: max(10px, 3.6cqw); letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+    .signal small::after { content: ""; display: inline-block; width: .55em; height: 1em; margin-left: .3em; vertical-align: -.15em; background: var(--accent); animation: blink 1s steps(1) infinite; }
+    /* real screenshots: drop an <img class="shot"> inside .tube */
+    .tube .shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    /* DBTR heights map, re-tinted to green phosphor */
+    .map { position: absolute; inset: 0; background: #4dff7a; }
+    .map i {
+      position: absolute; inset: 0;
+      background: url("img/dbtr-altezze.png") no-repeat; background-size: 205% auto; background-position: 94% 55%;
+      filter: grayscale(1) invert(1) contrast(1.8) brightness(1.05);
+      mix-blend-mode: multiply;
+    }
+    .caption { padding: 14px 22px 22px; }
+    .caption h3 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; line-height: 1; color: var(--ink-strong); text-shadow: var(--glow); }
+    .caption p { margin: 6px 0 0; color: var(--muted); font-size: .88rem; }
+    .caption p[lang="en"] { color: var(--faint); margin-top: 2px; }
+    .hero-monitor .caption { text-align: left; padding: 10px 16px 0; display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; }
+    .hero-monitor .caption p { margin: 0; }
+
+    /* --- sections -------------------------------------------------- */
+    section.block { border-bottom: 1px solid var(--line); }
+    .sec-head { display: grid; gap: 20px; padding-top: 72px; padding-bottom: 40px; }
+    @media (min-width: 900px) { .sec-head { grid-template-columns: 1fr 1fr; align-items: end; } }
+    .sec-num { color: var(--muted); }
+    .sec-num b { color: var(--ink); font-weight: 500; }
+    .sec-head h2 { margin-top: 18px; font-size: clamp(2.9rem, 6.5vw, 5rem); text-shadow: var(--glow); }
+    .h2-en { margin: 10px 0 0; font-family: var(--font-display); font-size: 1.75rem; color: var(--muted); text-shadow: var(--glow); }
+    .sec-head p { margin: 0; color: var(--muted); max-width: 38rem; }
+    .sec-head p + p { margin-top: 10px; color: var(--faint); font-size: .95rem; }
+
+    /* gallery */
+    .gallery { display: flex; flex-wrap: wrap; justify-content: center; padding: 1px 0 0 1px; margin-bottom: 72px; }
+    .gallery .monitor { flex: 1 1 280px; max-width: 400px; border: 1px solid var(--line); margin: -1px 0 0 -1px; background: var(--bg); }
+    @media (max-width: 600px) { .gallery .monitor { max-width: none; } }
+
+    /* steps (same grid as the yt pipeline) */
+    .rules { display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+    @media (min-width: 768px) { .rules { grid-template-columns: repeat(2, 1fr); } .rules .rule:last-child { grid-column: span 2; } }
+    @media (min-width: 1100px) { .rules { grid-template-columns: repeat(5, 1fr); } .rules .rule:last-child { grid-column: auto; } }
+    .rule { background: var(--bg); padding: 28px 24px 32px; }
+    .rule .n { color: var(--accent); }
+    .rule h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; line-height: 1; margin: 18px 0 10px; color: var(--ink-strong); text-shadow: var(--glow); }
+    .rule p { margin: 0; color: var(--muted); font-size: .92rem; }
+    .rule p.en { margin-top: 8px; color: var(--faint); font-size: .87rem; }
+
+    /* numbers */
+    .stats { display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); grid-template-columns: repeat(2, 1fr); }
+    @media (min-width: 900px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+    .stat { background: var(--bg); padding: 26px 24px 28px; }
+    .stat .num { display: block; font-family: var(--font-display); font-size: clamp(3rem, 6vw, 4.6rem); line-height: .9; color: var(--accent); text-shadow: var(--glow); font-variant-numeric: tabular-nums; }
+    .stat .num small { font-size: .45em; color: var(--muted); margin-right: .15em; }
+    .stat p { margin: 10px 0 0; color: var(--ink); font-size: .9rem; }
+    .stat p[lang="en"] { margin-top: 2px; color: var(--faint); font-size: .82rem; }
+    .facts { display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+    @media (min-width: 900px) { .facts { grid-template-columns: repeat(2, 1fr); } }
+    .fact { background: var(--bg); padding: 24px; }
+    .fact h3 { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; line-height: 1; color: var(--ink-strong); }
+    .fact p { margin: 0; color: var(--muted); font-size: .92rem; }
+    .fact p[lang="en"] { margin-top: 6px; color: var(--faint); font-size: .86rem; }
+
+    /* status */
+    .status { display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+    @media (min-width: 900px) { .status { grid-template-columns: 1fr 1.3fr; } }
+    .status > div { background: var(--bg); padding: 30px 24px 40px; }
+    .live { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 2.2rem; line-height: 1; color: var(--ink-strong); text-shadow: var(--glow); }
+    .live i { width: 14px; height: 14px; background: var(--accent); box-shadow: 0 0 10px rgba(77, 255, 122, .7); animation: blink 1.4s steps(1) infinite; }
+    .status p { color: var(--muted); margin: 14px 0 0; }
+    .status p[lang="en"] { color: var(--faint); margin-top: 6px; font-size: .93rem; }
+    .todo { list-style: none; margin: 14px 0 0; padding: 0; }
+    .todo li { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); color: var(--ink); }
+    .todo li:last-child { border-bottom: 0; }
+    .todo li .x { font-family: var(--font-mono); color: var(--accent); flex: none; }
+    .todo li small { display: block; color: var(--faint); font-size: .85rem; }
+
+    /* credits */
+    .credits { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+    @media (min-width: 900px) { .credits { grid-template-columns: repeat(2, 1fr); } }
+    .credits li { background: var(--bg); padding: 24px; }
+    .credits .what { color: var(--faint); }
+    .credits .who { display: block; margin-top: 10px; font-family: var(--font-display); font-size: 1.7rem; line-height: 1.05; color: var(--ink-strong); text-shadow: var(--glow); }
+    .credits p { margin: 8px 0 0; color: var(--muted); font-size: .9rem; }
+    .credits p[lang="en"] { margin-top: 4px; color: var(--faint); font-size: .85rem; }
+    .credits a { color: var(--ink-strong); text-decoration-color: var(--accent); text-underline-offset: 3px; }
+    .credits a:hover { color: var(--accent); }
+    .note { padding: 28px 0 56px; color: var(--faint); font-size: .88rem; max-width: 60rem; }
+    .note p { margin: 0 0 6px; }
+
+    /* footer */
+    footer { background: var(--bg-sunken); }
+    .foot { display: grid; gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
+    @media (min-width: 768px) { .foot { grid-template-columns: 2fr 1.4fr 1fr; } }
+    .foot > div { background: var(--bg-sunken); padding: 32px 24px; }
+    .foot h4 { margin: 0 0 14px; color: var(--faint); font-weight: 500; }
+    .foot ul { list-style: none; margin: 0; padding: 0; }
+    .foot li { margin: 6px 0; color: var(--muted); font-size: .88rem; }
+    .foot a { color: var(--muted); text-decoration: none; }
+    .foot a:hover { color: var(--ink); text-decoration: underline; }
+    .foot .tag { color: var(--muted); margin: 12px 0 0; max-width: 30rem; font-size: .95rem; }
+    .foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding: 18px 0; color: var(--faint); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- CRT barrel-distortion filters are generated per screen by the script at the bottom -->
+  <svg id="crt-defs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"></svg>
+
+  <!-- ============================ NAV ============================ -->
+  <header class="nav">
+    <div class="nav-row">
+      <div class="nav-left">
+        <a class="logo" href="../" title="violaceo-net – Progetti"><i class="logo-mark" aria-hidden="true"></i>Pieve FPS</a>
+        <nav class="nav-links hud" aria-label="Sezioni">
+          <a href="#cose"><span>Cos'è</span></a>
+          <a href="#galleria"><span>Galleria</span></a>
+          <a href="#come"><span>Come funziona</span></a>
+          <a href="#numeri"><span>Numeri</span></a>
+          <a href="#stato"><span>Stato</span></a>
+        </nav>
+      </div>
+      <div class="nav-right">
+        <a class="btn btn-primary" href="#crediti">Crediti · Credits</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================ HERO ============================ -->
+    <section class="hero">
+      <div class="floor" aria-hidden="true"></div>
+      <div class="wrap hero-inner">
+        <span class="eyebrow hud"><i></i>violaceo-net / Pieve FPS</span>
+        <h1 class="display">Pieve di Cento in 3D, <span class="hl">dai dati aperti.</span><span class="cursor" aria-hidden="true"></span></h1>
+        <p class="h1-en" lang="en">Pieve di Cento in 3D, from open data.</p>
+        <p class="lede">
+          Il paese ricostruito dai dati geografici aperti e percorribile in prima persona, come in un videogioco.
+          <span lang="en">The town rebuilt from open geodata and explorable in first person, like a video game.</span>
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#galleria">Galleria · Gallery ↓</a>
+          <a class="btn btn-ghost" href="#come">Come funziona · How it works ↓</a>
+        </div>
+        <div class="hero-meta hud">
+          <span>DBTR Emilia-Romagna</span><span>·</span><span>OpenStreetMap</span><span>·</span><span>Unreal Engine 5</span>
+        </div>
+
+        <div class="monitor hero-monitor">
+          <div class="screen"><div class="tube">
+            <span class="corner chip">CH 01</span>
+            <span class="corner-r chip">DBTR · H_UVL</span>
+            <div class="map" role="img" aria-label="Mappa del centro di Pieve di Cento: gli edifici del DBTR colorati per altezza"><i></i></div>
+          </div></div>
+          <div class="caption">
+            <p>Il centro di Pieve di Cento nei dati: le unità volumetriche del DBTR, più chiare quanto più alte.</p>
+            <p lang="en">Central Pieve di Cento as data: DBTR building volumes, brighter the taller they are.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 01 COS'È ============================ -->
+    <section class="block" id="cose">
+      <div class="wrap sec-head">
+        <div>
+          <span class="sec-num hud"><b>01</b>/Cos'è · What it is</span>
+          <h2 class="display">Un paese vero, <span class="hl">da percorrere.</span></h2>
+          <p class="h2-en" lang="en">A real town, to walk through.</p>
+        </div>
+        <div>
+          <p>
+            Pieve di Cento (BO) ricostruita in 3D dai dati geografici aperti e percorribile in prima persona, come in un videogioco.
+            Gli edifici hanno pianta e altezza reali, prese dal Database Topografico della Regione Emilia-Romagna. Strade, verde e
+            alberi vengono da OpenStreetMap. Tutto il resto (facciate, tetti, portici, insegne, arredo urbano) lo genera un programma
+            a partire da quei dati, con correzioni fatte a mano camminando per il paese virtuale.
+          </p>
+          <p lang="en">
+            Pieve di Cento (Bologna, Italy) rebuilt in 3D from open geodata, explorable in first person. Real building footprints
+            and heights from the regional topographic database, streets and greenery from OpenStreetMap; facades, roofs, porticoes,
+            shop signs and street furniture are generated from those data and refined by hand.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 02 GALLERIA ============================ -->
+    <section class="block" id="galleria">
+      <div class="wrap sec-head">
+        <div>
+          <span class="sec-num hud"><b>02</b>/Galleria · Gallery</span>
+          <h2 class="display">Dal <span class="hl">monitor.</span></h2>
+          <p class="h2-en" lang="en">On screen.</p>
+        </div>
+        <div>
+          <p>Schermate prese da Unreal Engine e dal primo prototipo. Le immagini arrivano a breve: i monitor sono già accesi.</p>
+          <p lang="en">Screenshots from Unreal Engine and the first prototype. Images are on their way: the screens are already on.</p>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <div class="gallery">
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">01</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Piazza A. Costa</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Piazza A. Costa e la Collegiata</h3><p lang="en">Piazza A. Costa and the Collegiate Church</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">02</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Il Voltone</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Il Voltone e i portici</h3><p lang="en">The Voltone and the porticoes</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">03</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Le porte</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Le quattro porte</h3><p lang="en">The four town gates</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">04</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Tramonto</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Tramonto sul centro</h3><p lang="en">Sunset over the centre</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">05</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Nebbia</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Nebbia padana</h3><p lang="en">Po Valley fog</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">06</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Dall'alto</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Vista dall'alto</h3><p lang="en">Aerial view</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">07</span><span class="corner-r chip">raylib</span>
+              <div class="signal"><b>Prima</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Prima: il prototipo raylib</h3><p lang="en">Before: the raylib prototype</p></div>
+          </div>
+          <div class="monitor">
+            <div class="screen"><div class="tube">
+              <span class="corner chip">08</span><span class="corner-r chip">UE5</span>
+              <div class="signal"><b>Dopo</b><small>Segnale in arrivo</small></div>
+            </div></div>
+            <div class="caption"><h3>Dopo: Unreal Engine</h3><p lang="en">After: Unreal Engine, same spot</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 03 COME FUNZIONA ============================ -->
+    <section class="block" id="come">
+      <div class="wrap sec-head">
+        <div>
+          <span class="sec-num hud"><b>03</b>/Come funziona · How it works</span>
+          <h2 class="display">Dai dati <span class="hl">al paese.</span></h2>
+          <p class="h2-en" lang="en">From data to town.</p>
+        </div>
+        <div>
+          <p>Cinque passaggi, quasi tutti automatici: i dati aperti entrano da una parte, il paese percorribile esce dall'altra.</p>
+          <p lang="en">Five steps, almost all automatic: open data goes in at one end, a walkable town comes out at the other.</p>
+        </div>
+      </div>
+      <div class="rules">
+        <div class="rule">
+          <span class="n hud">01</span>
+          <h3>Dati</h3>
+          <p>Shapefile del DBTR (unità volumetriche con l'altezza, civici, marciapiedi, portici, aiuole, recinzioni, colture, argine del Reno) e OpenStreetMap (strade, alberi, fermate, attraversamenti).</p>
+          <p class="en" lang="en">Data: DBTR shapefiles (building volumes with heights, house numbers, sidewalks, porticoes, flower beds, fences, crops, the Reno embankment) and OpenStreetMap (streets, trees, stops, crossings).</p>
+        </div>
+        <div class="rule">
+          <span class="n hud">02</span>
+          <h3>Baker</h3>
+          <p>In C# / .NET 10: riproietta, pulisce e unisce i dati. Genera muri, tetti a falde (straight skeleton), portici con archi e volte, strade e marciapiedi con i cordoli, e decide dove vanno finestre, portoni, persiane, balconi, lampioni, cartelli e insegne.</p>
+          <p class="en" lang="en">Baker, in C# / .NET 10: reprojects, cleans and merges the data; generates walls, pitched roofs (straight skeleton), arched and vaulted porticoes, streets and kerbed sidewalks, and places windows, doors, shutters, balconies, lamps, signs and shop signs.</p>
+        </div>
+        <div class="rule">
+          <span class="n hud">03</span>
+          <h3>Blender</h3>
+          <p>In automatico, da script: modella circa 200 elementi di facciata e d'arredo (finestre, portoni, lampioni, cartelli stradali, monumenti, vetrine di negozi veri) ed esporta in glTF.</p>
+          <p class="en" lang="en">Blender, scripted: models about 200 facade and street-furniture pieces (windows, doors, lamps, road signs, monuments, real shop fronts) and exports them as glTF.</p>
+        </div>
+        <div class="rule">
+          <span class="n hud">04</span>
+          <h3>Unreal Engine 5.8</h3>
+          <p>Importazione automatica da Python, materiali PBR, luce dinamica (Lumen), geometria virtualizzata (Nanite), più verifiche automatiche a ogni import.</p>
+          <p class="en" lang="en">Unreal Engine 5.8: automatic Python import, PBR materials, dynamic lighting (Lumen), virtualized geometry (Nanite), plus automatic checks on every import.</p>
+        </div>
+        <div class="rule">
+          <span class="n hud">05</span>
+          <h3>Prima versione</h3>
+          <p>Un prototipo con raylib (C#), già percorribile, con collisioni e un eseguibile autonomo.</p>
+          <p class="en" lang="en">First version: a raylib (C#) prototype, already walkable, with collisions and a standalone executable.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 04 NUMERI ============================ -->
+    <section class="block" id="numeri">
+      <div class="wrap sec-head">
+        <div>
+          <span class="sec-num hud"><b>04</b>/Numeri · Numbers</span>
+          <h2 class="display">Il paese <span class="hl">in cifre.</span></h2>
+          <p class="h2-en" lang="en">The town in figures.</p>
+        </div>
+        <div>
+          <p>Tutto nel raggio di 1,5 km dal centro.</p>
+          <p lang="en">All within 1.5 km of the town centre.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="num"><small>~</small><span data-count="2700">2 700</span></span><p>corpi di fabbrica dal DBTR</p><p lang="en">buildings from the DBTR</p></div>
+        <div class="stat"><span class="num"><small>~</small><span data-count="190000">190 000</span></span><p>elementi di facciata posati</p><p lang="en">facade elements placed</p></div>
+        <div class="stat"><span class="num"><span data-count="3100">3 100</span></span><p>numeri civici nelle posizioni reali</p><p lang="en">house numbers in their real positions</p></div>
+        <div class="stat"><span class="num"><span data-count="130">130</span></span><p>targhe delle vie</p><p lang="en">street name plates</p></div>
+        <div class="stat"><span class="num"><small>~</small><span data-count="300">300</span></span><p>cartelli stradali</p><p lang="en">road signs</p></div>
+        <div class="stat"><span class="num"><span data-count="557">557</span></span><p>lampioni</p><p lang="en">street lamps</p></div>
+        <div class="stat"><span class="num"><small>~</small><span data-count="200">200</span></span><p>modelli di facciata e arredo in Blender</p><p lang="en">facade and furniture models in Blender</p></div>
+        <div class="stat"><span class="num"><span data-count="4">4</span></span><p>porte del paese: Asia, Bologna, Cento, Ferrara</p><p lang="en">town gates: Asia, Bologna, Cento, Ferrara</p></div>
+      </div>
+      <div class="facts">
+        <div class="fact">
+          <h3>Monumenti</h3>
+          <p>Le quattro porte, la Collegiata, il Municipio, la Rocca, la chiesa della SS. Trinità, la Casa degli Anziani. E i portici del centro storico con archi, pilastri e volte, compreso il Voltone.</p>
+          <p lang="en">The four gates, the Collegiate Church, the Town Hall, the Rocca, the Holy Trinity church, the Casa degli Anziani, and the arched, vaulted porticoes of the old town, including the Voltone.</p>
+        </div>
+        <div class="fact">
+          <h3>Arredo urbano</h3>
+          <p>Cartelli stradali, lampioni, panchine, fermate dell'autobus, isole ecologiche, strisce pedonali.</p>
+          <p lang="en">Road signs, street lamps, benches, bus stops, recycling points, zebra crossings.</p>
+        </div>
+        <div class="fact">
+          <h3>Campagna e Reno</h3>
+          <p>Campi, frutteti, vigneti, canali e l'argine del Reno con i ponti.</p>
+          <p lang="en">Fields, orchards, vineyards, canals and the Reno embankment with its bridges.</p>
+        </div>
+        <div class="fact">
+          <h3>Negozi e fotogrammetria</h3>
+          <p>Negozi reali ricostruiti dalle foto, con vetrine e dehors (prime prove: Caffè del Voltone, Panevino). Prima prova di fotogrammetria: RealityScan → Blender → Unreal.</p>
+          <p lang="en">Real shops rebuilt from photos, with shop windows and outdoor seating (first tests: Caffè del Voltone, Panevino). First photogrammetry test: RealityScan → Blender → Unreal.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 05 STATO ============================ -->
+    <section class="block" id="stato">
+      <div class="wrap sec-head">
+        <div>
+          <span class="sec-num hud"><b>05</b>/Stato · Status</span>
+          <h2 class="display">Lavori <span class="hl">in corso.</span></h2>
+          <p class="h2-en" lang="en">Work in progress.</p>
+        </div>
+        <div>
+          <p>Il progetto è in sviluppo: il paese si arricchisce a ogni giro.</p>
+          <p lang="en">The project is in development: the town gets richer with every pass.</p>
+        </div>
+      </div>
+      <div class="status">
+        <div>
+          <span class="live"><i aria-hidden="true"></i>In sviluppo</span>
+          <p>I dati sono ufficiali, ma molti dettagli (facciate, negozi, arredo) sono ricostruiti con regole o a mano: è una ricostruzione, non un rilievo.</p>
+          <p lang="en">The data are official, but many details (facades, shops, street furniture) are rebuilt by rules or by hand: it is a reconstruction, not a survey.</p>
+        </div>
+        <div>
+          <span class="hud" style="color:var(--faint)">Prossimi passi · Next steps</span>
+          <ul class="todo">
+            <li><span class="x">→</span><span>I negozi del centro<small lang="en">The shops of the town centre</small></span></li>
+            <li><span class="x">→</span><span>Fotogrammetria della colonnina bizantina<small lang="en">Photogrammetry of the Byzantine column</small></span></li>
+            <li><span class="x">→</span><span>Versione giocabile in Unreal<small lang="en">A playable Unreal version</small></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ 06 CREDITI ============================ -->
+    <section class="block" id="crediti">
+      <div class="wrap sec-head">
+        <div>
+          <span class="sec-num hud"><b>06</b>/Crediti · Credits</span>
+          <h2 class="display">Grazie <span class="hl">ai dati aperti.</span></h2>
+          <p class="h2-en" lang="en">Thanks to open data.</p>
+        </div>
+        <div>
+          <p>Pieve FPS esiste grazie a dati, texture e strumenti messi a disposizione da altri.</p>
+          <p lang="en">Pieve FPS exists thanks to data, textures and tools shared by others.</p>
+        </div>
+      </div>
+      <ul class="credits">
+        <li>
+          <span class="what hud">Edifici · Buildings</span>
+          <span class="who">© Regione Emilia-Romagna</span>
+          <p>Database Topografico Regionale (DBTR), licenza <a href="https://creativecommons.org/licenses/by/4.0/deed.it" target="_blank" rel="noopener">CC BY 4.0</a>.</p>
+          <p lang="en">Regional Topographic Database, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> license.</p>
+        </li>
+        <li>
+          <span class="what hud">Strade, verde, alberi, negozi, arredo · Roads, greenery, trees, shops, street furniture</span>
+          <span class="who">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+          <p>Licenza <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noopener">ODbL</a>.</p>
+          <p lang="en">Open Database License (ODbL).</p>
+        </li>
+        <li>
+          <span class="what hud">Texture e arredi 3D · Textures and 3D props</span>
+          <span class="who"><a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> e <a href="https://ambientcg.com" target="_blank" rel="noopener">ambientCG</a></span>
+          <p>Risorse CC0: grazie per averle rese libere.</p>
+          <p lang="en">CC0 assets: thank you for making them free.</p>
+        </li>
+        <li>
+          <span class="what hud">Motore e fotogrammetria · Engine and photogrammetry</span>
+          <span class="who">Unreal Engine e RealityScan</span>
+          <p>Realizzato con Unreal Engine; fotogrammetria con RealityScan (Epic Games).</p>
+          <p lang="en">Made with Unreal Engine; photogrammetry with RealityScan (Epic Games).</p>
+        </li>
+      </ul>
+      <div class="wrap note">
+        <p>Le immagini di questa pagina sono nostre: schermate di Unreal Engine, del prototipo raylib e render di Blender. Insegne e vetrine dei negozi sono ricostruite da noi.</p>
+        <p lang="en">All images on this page are our own: Unreal Engine and raylib prototype screenshots and Blender renders. Shop signs and fronts are rebuilt by us.</p>
+        <p>Progetto personale, non affiliato con la Regione Emilia-Romagna, il Comune di Pieve di Cento, OpenStreetMap o Epic Games. Unreal Engine e RealityScan sono marchi di Epic Games, Inc.</p>
+        <p lang="en">Personal project, not affiliated with Regione Emilia-Romagna, the Municipality of Pieve di Cento, OpenStreetMap or Epic Games. Unreal Engine and RealityScan are trademarks of Epic Games, Inc.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer>
+    <div class="foot">
+      <div>
+        <a class="logo" href="../" style="padding:0;border:0"><i class="logo-mark" aria-hidden="true"></i>Pieve FPS</a>
+        <p class="tag">Pieve di Cento in 3D, dai dati aperti, percorribile in prima persona.</p>
+        <p class="tag" lang="en" style="color:var(--faint);margin-top:6px">Pieve di Cento in 3D, from open data, explorable in first person.</p>
+      </div>
+      <div>
+        <h4 class="hud">Crediti · Credits</h4>
+        <ul>
+          <li>Edifici: © Regione Emilia-Romagna, DBTR, CC BY 4.0</li>
+          <li>Strade, verde, alberi, negozi, arredo: © OpenStreetMap contributors, ODbL</li>
+          <li>Texture e arredi 3D: Poly Haven, ambientCG (CC0)</li>
+          <li>Unreal Engine e RealityScan (Epic Games)</li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="hud">Info</h4>
+        <ul>
+          <li><a href="#crediti">Crediti completi · Full credits</a></li>
+          <li><a href="../">violaceo-net – Progetti</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap foot-bottom hud">
+      <span>© 2026 violaceo-net</span>
+      <span>Dati → Baker → Blender → Unreal</span>
+    </div>
+  </footer>
+
+  <script>
+    /* CRT barrel distortion: one SVG displacement filter per screen size
+       (same curvature as the yt page, K = 0.12). */
+    (function () {
+      var K = 0.12, NS = 'http://www.w3.org/2000/svg';
+      var defs = document.getElementById('crt-defs');
+      var tubes = [].slice.call(document.querySelectorAll('.tube'));
+      if (!defs || !tubes.length) return;
+      var cache = {};
+      function mapFor(w, h) {
+        var key = w + 'x' + h;
+        if (cache[key]) return cache[key];
+        var N = 128, M = Math.max(2, Math.round(N * h / w));
+        var c = document.createElement('canvas'); c.width = N; c.height = M;
+        var ctx = c.getContext('2d'), img = ctx.createImageData(N, M), d = img.data;
+        var S = 2 * K * Math.max(w, h);
+        for (var y = 0; y < M; y++) for (var x = 0; x < N; x++) {
+          var nx = (x + .5) / N * 2 - 1, ny = (y + .5) / M * 2 - 1, r2 = nx * nx + ny * ny;
+          var f = (1 + K * r2) / (1 + K) - 1;
+          var i = (y * N + x) * 4;
+          d[i]     = Math.max(0, Math.min(255, Math.round(127.5 + nx * f * w / 2 / S * 255)));
+          d[i + 1] = Math.max(0, Math.min(255, Math.round(127.5 + ny * f * h / 2 / S * 255)));
+          d[i + 2] = 0; d[i + 3] = 255;
+        }
+        ctx.putImageData(img, 0, 0);
+        var id = 'crt-' + Object.keys(cache).length;
+        var filter = document.createElementNS(NS, 'filter');
+        filter.setAttribute('id', id);
+        filter.setAttribute('filterUnits', 'userSpaceOnUse');
+        filter.setAttribute('color-interpolation-filters', 'sRGB');
+        filter.setAttribute('x', 0); filter.setAttribute('y', 0);
+        filter.setAttribute('width', w); filter.setAttribute('height', h);
+        var fe = document.createElementNS(NS, 'feImage');
+        fe.setAttribute('preserveAspectRatio', 'none');
+        fe.setAttribute('x', 0); fe.setAttribute('y', 0); fe.setAttribute('width', w); fe.setAttribute('height', h);
+        fe.setAttribute('href', c.toDataURL());
+        fe.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', c.toDataURL());
+        fe.setAttribute('result', 'map');
+        var dm = document.createElementNS(NS, 'feDisplacementMap');
+        dm.setAttribute('in', 'SourceGraphic'); dm.setAttribute('in2', 'map'); dm.setAttribute('scale', S);
+        dm.setAttribute('xChannelSelector', 'R'); dm.setAttribute('yChannelSelector', 'G');
+        filter.appendChild(fe); filter.appendChild(dm); defs.appendChild(filter);
+        return (cache[key] = id);
+      }
+      function apply() {
+        tubes.forEach(function (t) {
+          var w = t.offsetWidth, h = t.offsetHeight;
+          if (w && h) t.style.filter = 'url(#' + mapFor(w, h) + ')';
+        });
+      }
+      apply();
+      var raf = 0;
+      function onResize() { cancelAnimationFrame(raf); raf = requestAnimationFrame(apply); }
+      if (window.ResizeObserver) tubes.forEach(function (t) { new ResizeObserver(onResize).observe(t); });
+      else window.addEventListener('resize', onResize);
+    })();
+  </script>
+
+  <script>
+    /* Numbers count up the first time they scroll into view. */
+    (function () {
+      var els = [].slice.call(document.querySelectorAll('[data-count]'));
+      var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!els.length || reduce || !window.IntersectionObserver) return;
+      function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+      function run(el) {
+        var target = +el.getAttribute('data-count'), t0 = performance.now(), dur = 1400;
+        (function step(now) {
+          var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+          el.textContent = fmt(Math.round(target * e));
+          if (k < 1) requestAnimationFrame(step);
+        })(t0);
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); run(e.target); } });
+      }, { threshold: 0.6 });
+      els.forEach(function (el) { el.textContent = '0'; io.observe(el); });
+    })();
+  </script>
+</body>
+</html>
